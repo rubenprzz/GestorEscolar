@@ -1,0 +1,27 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [header]="title">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ng-container *ngFor="let field of fields">
+      <div class="p-field" *ngIf="field.type !== 'hidden'">
+        <label for="{{field.name}}">{{field.label}}</label>
+        <input
+          *ngIf="field.type === 'text'"
+          id="{{field.name}}"
+          pInputText
+          formControlName="{{field.name}}" />
+        <p-dropdown
+          *ngIf="field.type === 'dropdown'"
+          [options]="field.options"
+          formControlName="{{field.name}}">
+        </p-dropdown>
+      </div>
+    </ng-container>
+    <p-footer>
+      <button pButton label="Guardar" type="submit" class="p-mr-2"></button>
+      <button pButton label="Cancelar" type="button" (click)="onCancel()"></button>
+    </p-footer>
+  </form>
+</p-dialog>

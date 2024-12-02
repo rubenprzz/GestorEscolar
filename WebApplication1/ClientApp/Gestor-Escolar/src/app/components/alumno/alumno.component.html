@@ -1,0 +1,8 @@
+<app-table
+  [data]="alumnos"
+  [columns]="columns"
+  [globalFilterFields]="['nombre', 'apellidos', 'dni', 'curso', 'cantidadAsistenciasFaltadas']"
+  (onEdit)="editAlumno($event)"
+  (onDelete)="deleteAlumno($event.id)"
+  (onAdd)="openNew()"
+></app-table>
