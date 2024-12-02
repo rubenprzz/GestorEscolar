@@ -1,0 +1,107 @@
+<div class="card" style="max-width: 600px; margin: auto;">
+  <form [formGroup]="justificanteForm" (ngSubmit)="onSubmit()">
+    <!-- Alias (Autogenerado) -->
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-tag"></i>
+      </span>
+      <input
+        pInputText
+        placeholder="Alias Autogenerado"
+        formControlName="alias"
+        [readonly]="true"
+      />
+    </div>
+    <small class="p-info">El alias se genera automáticamente.</small>
+    <!-- Descripción -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-align-left"></i>
+      </span>
+      <input
+        pInputText
+        placeholder="Descripción"
+        formControlName="descripcion"
+        [ngClass]="{'ng-invalid': isFieldInvalid('descripcion')}">
+    </div>
+    <small *ngIf="isFieldInvalid('descripcion')" class="p-error">
+      La descripción es obligatoria.
+    </small>
+    <!-- Fecha de Justificación -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-calendar"></i>
+      </span>
+      <p-calendar
+        formControlName="fechaJustificacion"
+        placeholder="Fecha de Justificación"
+        showIcon="true"
+        dateFormat="dd/mm/yy">
+      </p-calendar>
+    </div>
+    <small *ngIf="isFieldInvalid('fechaJustificacion')" class="p-error">
+      La fecha de justificación es obligatoria.
+    </small>
+
+
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-align-left"></i>
+      </span>
+      <input
+        pInputText
+        placeholder="Motivo"
+        formControlName="motivo"
+        [ngClass]="{'ng-invalid': isFieldInvalid('motivo')}">
+    </div>
+    <small *ngIf="isFieldInvalid('motivo')" class="p-error">
+     El motivo es obligatorio.
+    </small>
+
+    <div  class="p-inputgroup mt-3 ">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-id-card"></i>
+      </span>
+      <p-dropdown
+        [options]="alumnos"
+        optionLabel="dni"
+        optionValue="dni"
+        formControlName="alumnoDni"
+        placeholder="Selecciona un DNI"
+        (onChange)="generateAlias()">
+      </p-dropdown>
+    </div>
+    <small *ngIf="isFieldInvalid('alumnoDni')" class="p-error">
+      Selecciona un DNI válido.
+    </small>
+
+    <!-- Dropdown para Identificador de Asistencia -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-hashtag"></i>
+      </span>
+      <p-dropdown
+        [options]="asistencias"
+        optionLabel="identificador"
+        optionValue="identificador"
+        formControlName="asistenciaIdentificador"
+        placeholder="Selecciona una Asistencia"
+        (onChange)="generateAlias()">
+      </p-dropdown>
+    </div>
+    <small *ngIf="isFieldInvalid('asistenciaIdentificador')" class="p-error">
+      Selecciona una asistencia válida.
+    </small>
+
+    <!-- Botón de Enviar -->
+    <div class="mt-4">
+      <p-button
+        label="Crear Justificante"
+        [text]="true"
+        [raised]="true"
+        [disabled]="justificanteForm.invalid"
+        (click)="onSubmit()">
+      </p-button>
+    </div>
+  </form>
+</div>
