@@ -1,0 +1,44 @@
+<p-card header="Detalles del Alumno" subheader="{{ alumno?.nombre }} {{ alumno?.apellidos }}" [style]="{ width: '100%' }">
+  <ng-template pTemplate="header">
+    <img alt="Alumno" src="https://example.com/imagen-del-alumno.jpg" />
+  </ng-template>
+
+  <div>
+    <h4>Información Básica:</h4>
+    <p><strong>Nombre:</strong> {{ alumno?.nombre }} {{ alumno?.apellidos }}</p>
+    <p><strong>DNI:</strong> {{ alumno?.dni }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ alumno?.fechaNacimiento }}</p>
+    <p><strong>Email:</strong> {{ alumno?.email }}</p>
+    <p><strong>Teléfono:</strong> {{ alumno?.telefono || 'No proporcionado' }}</p>
+    <p><strong>Curso:</strong> {{ alumno?.cursoNombre }}</p>
+  </div>
+
+  <div class="mt-3">
+    <h4>Asistencias:</h4>
+    <p><strong>Cantidad de Asistencias Faltadas:</strong> {{ alumno?.cantidadAsistenciasFaltadas }}</p>
+  </div>
+
+  <div class="mt-3">
+    <h4>Retrasos:</h4>
+    <p><strong>Cantidad de Retrasos:</strong> {{ alumno?.cantidadRetrasos }}</p>
+  </div>
+
+  <div class="mt-3">
+    <h4>Padres:</h4>
+    <ul>
+      <li *ngFor="let padre of alumno?.padres">
+        <strong>{{ padre.nombre }}</strong> (DNI: {{ padre.dni }})
+      </li>
+    </ul>
+  </div>
+
+  <div class="mt-3">
+    <h4>Notas:</h4>
+    <ul>
+      <li *ngFor="let nota of alumno?.notas">
+        <strong>{{ nota.asignatura }}:</strong> {{ nota.valor }}
+      </li>
+    </ul>
+  </div>
+
+</p-card>

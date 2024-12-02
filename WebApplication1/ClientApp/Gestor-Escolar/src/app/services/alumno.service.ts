@@ -18,6 +18,9 @@ export class AlumnoService {
   createAlumno(alumno: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, alumno);
   }
+  getAlumnoById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
 
   updateAlumno(alumno: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${alumno.id}`, alumno);

@@ -5,6 +5,7 @@ export class Justificante {
   alias?: string;
   fechaJustificacion?: string;
   descripcion?: string;
+  motivo?: string;
   alumnoDni?: string;
   asistenciaIdentificador?: string;
 

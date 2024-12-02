@@ -21,6 +21,7 @@ public class Alumno
     public ICollection<Padre> Padres { get; set; }
     [JsonIgnore]
     public ICollection<Asistencia> Asistencias { get; set; }
+    [JsonIgnore]
     public ICollection<Justificante> Justificantes { get; set; }
     public ICollection<Retraso> Retrasos { get; set; }
     public ICollection<Nota> Notas { get; set; }

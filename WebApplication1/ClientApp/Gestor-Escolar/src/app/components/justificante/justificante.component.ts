@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AppTableComponent } from '../app-table/app-table.component';
 import { JustificanteService } from '../../services/justificante.service';
+import {AddJustificanteComponent} from '../add-justificante/add-justificante.component';
+import {DialogService} from 'primeng/dynamicdialog';
+import {MessageService} from 'primeng/api';
 
 
 @Component({
@@ -15,7 +18,7 @@ import { JustificanteService } from '../../services/justificante.service';
 export class JustificanteComponent implements OnInit {
   justificantes: any[] = [];
 
-  constructor(private justificanteService: JustificanteService) {}
+  constructor(private justificanteService: JustificanteService, private readonly dialogService: DialogService, private readonly messageService: MessageService) {}
 
   ngOnInit() {
     this.cargarJustificantes();
@@ -28,6 +31,20 @@ export class JustificanteComponent implements OnInit {
     { field: 'asistenciaIdentificador', header: 'Identificador de asistencia', width: '12%', type: 'text' },
     { field: 'alumnoDni', header: 'DNI del alumno', width: '22%', type: 'text' },
   ];
+  openNew() {
+    const dialogRef = this.dialogService.open(AddJustificanteComponent, {
+      header: 'Crear nuevo justificante',  // Título del diálogo
+      width: '70%',
+    });
+
+    // Opcional: puedes escuchar si el alumno se crea correctamente
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarJustificantes();  // Recargar los alumnos si se crea uno nuevo
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Alumno creado correctamente.'});
+      }
+    });
+  }
 
   cargarJustificantes() {
     this.justificanteService.getJustificantes().subscribe({

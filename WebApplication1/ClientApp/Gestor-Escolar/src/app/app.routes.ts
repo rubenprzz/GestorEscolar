@@ -9,6 +9,8 @@ import {PadreComponent} from './components/padre/padre.component';
 import {AsignaturaComponent} from './components/asignatura/asignatura.component';
 import {JustificanteComponent} from './components/justificante/justificante.component';
 import {LoginComponent} from './components/login/login.component';
+import {ViewAlumnoComponent} from './components/view-alumno/view-alumno.component';
+import {AddJustificanteComponent} from './components/add-justificante/add-justificante.component';
 
 export const routes: Routes = [
   { path: 'alumnos', component: AlumnoComponent },
@@ -21,6 +23,7 @@ export const routes: Routes = [
   { path: 'padre', component: PadreComponent },
   { path: 'asignatura', component: AsignaturaComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'alumnos/:id', component: ViewAlumnoComponent },
 
 
 

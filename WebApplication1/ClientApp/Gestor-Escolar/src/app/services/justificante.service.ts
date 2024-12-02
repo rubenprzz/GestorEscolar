@@ -14,5 +14,8 @@ export class JustificanteService {
   getJustificantes():  Observable<any>  {
     return this.http.get(this.apiUrl)
   }
+  createJustificante(justificante: any): Observable<any> {
+    return this.http.post(this.apiUrl, justificante);
+  }
 
 }

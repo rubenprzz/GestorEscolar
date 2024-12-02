@@ -3,4 +3,5 @@
   [data]="justificantes"
   [columns]="columns"
 [globalFilterFields]="['alias', 'descripcion', 'fechaJustificacion', 'asistenciaIdentificador', 'alumnoDni']"
+  (onAdd)="openNew()"
 ></app-table>

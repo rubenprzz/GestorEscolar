@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { AlumnoService } from '../services/alumno.service';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MessageService} from 'primeng/api';
 import {NgClass, NgIf} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import {CalendarModule} from 'primeng/calendar';
-import {CursoService} from '../services/curso.service';
 import {DropdownModule} from 'primeng/dropdown';
+import { AlumnoService } from '../../services/alumno.service';
+import { CursoService } from '../../services/curso.service';
+import {FileUploadModule} from 'primeng/fileupload';
 
 @Component({
   selector: 'app-crear-alumno',
@@ -17,7 +18,9 @@ import {DropdownModule} from 'primeng/dropdown';
     InputTextModule,
     NgIf,
     CalendarModule,
-    DropdownModule
+    DropdownModule,
+    FormsModule,
+    FileUploadModule
   ],
   standalone: true
 })
@@ -84,7 +87,8 @@ export class CrearAlumnoComponent implements OnInit {
     }
     formData.append('email', this.alumnoForm.get('email')?.value);
     formData.append('telefono', this.alumnoForm.get('telefono')?.value);
-    formData.append('cursoNombre', this.alumnoForm.get('cursoNombre')?.value);
+    const cursoNombre = this.alumnoForm.get('cursoNombre')?.value;
+    formData.append('cursoNombre', typeof cursoNombre === 'string' ? cursoNombre : cursoNombre.nombre);
 
     // Si hay foto, agregarla al FormData
     const foto = this.alumnoForm.get('foto')?.value;
@@ -111,6 +115,14 @@ export class CrearAlumnoComponent implements OnInit {
       }
     });
   }
+/*  onCursoChange(event: any) {
+    const selectedCurso = event.value;
+    if (selectedCurso && selectedCurso.nombre) {
+      this.alumnoForm.patchValue({
+        cursoNombre: selectedCurso.nombre
+      });
+    }
+  }*/
 
   onFileChange(event: any) {
     const file = event.target.files[0];

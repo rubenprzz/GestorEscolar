@@ -15,4 +15,7 @@ export class AsignaturaService {
   getAsignaturas(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
+  createAsignatura(asignatura: any): Observable<any> {
+    return this.http.post(this.apiUrl, asignatura);
+  }
 }

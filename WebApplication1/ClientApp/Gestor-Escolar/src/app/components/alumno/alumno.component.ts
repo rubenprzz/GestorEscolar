@@ -6,8 +6,8 @@ import {DialogModule} from 'primeng/dialog';
 import {InputTextModule} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
 import {Button} from 'primeng/button';
-import {CrearAlumnoComponent} from '../../crear-alumno/crear-alumno.component';
 import {DialogService} from 'primeng/dynamicdialog';
+import { CrearAlumnoComponent } from '../crear-alumno/crear-alumno.component';
 
 
 @Component({

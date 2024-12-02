@@ -79,25 +79,29 @@
       </span>
       <input
         pInputText
-        placeholder="Teléfono (Opcional)"
+        placeholder="Teléfono"
         formControlName="telefono"
       />
     </div>
+    <small *ngIf="isFieldInvalid('telefono')" class="p-error">El telefono es obligatorio.</small>
 
     <!-- Foto -->
-    <!-- Foto -->
     <div class="p-inputgroup mt-3">
-  <span class="p-inputgroup-addon">
-    <i class="pi pi-image"></i>
-  </span>
-      <input
-        type="file"
-        formControlName="foto"
-        (change)="onFileChange($event)"
-        placeholder="Subir Foto"
-      />
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-image"></i>
+      </span>
+      <p-fileUpload
+        mode="basic"
+        chooseLabel="Subir Foto"
+        chooseIcon="pi pi-upload"
+        name="foto"
+        accept="image/*"
+        maxFileSize="1000000"
+        (onSelect)="onFileChange($event)"
+        [auto]="false">
+      </p-fileUpload>
     </div>
-    <small *ngIf="isFieldInvalid('foto')" class="p-error">Foto es obligatoria.</small>
+    <small *ngIf="isFieldInvalid('foto')" class="p-error">La foto es obligatoria.</small>
 
     <!-- Curso -->
     <div class="p-inputgroup mt-3">
@@ -105,13 +109,13 @@
         <i class="pi pi-book"></i>
       </span>
       <p-dropdown
-        formControlName="cursoNombre"
+        class="p-dropdown-select"
         [options]="cursos"
         optionLabel="nombre"
-        placeholder="Selecciona un curso"
-        class="p-fluid"
-      ></p-dropdown>
-
+        optionValue="nombre"
+        formControlName="cursoNombre"
+        placeholder="Selecciona un curso">
+      </p-dropdown>
     </div>
     <small *ngIf="isFieldInvalid('cursoNombre')" class="p-error">
       Nombre del curso es obligatorio.
@@ -137,8 +141,7 @@
         [raised]="true"
         [disabled]="alumnoForm.invalid"
         (click)="onSubmit()"
-      />
+      ></p-button>
     </div>
-
   </form>
 </div>
