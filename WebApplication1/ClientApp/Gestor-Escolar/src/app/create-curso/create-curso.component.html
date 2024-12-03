@@ -1,0 +1,98 @@
+<div class="card">
+  <h2>Crear Curso</h2>
+
+  <form [formGroup]="cursoForm" (ngSubmit)="onSubmit()" class="p-fluid">
+    <!-- Campo para el nombre del curso -->
+    <div class="field">
+      <label for="nombre">Nombre del curso</label>
+      <input
+        id="nombre"
+        type="text"
+        pInputText
+        formControlName="nombre"
+        placeholder="Nombre del curso"
+      />
+      <small *ngIf="isFieldInvalid('nombre')" class="p-error"
+      >El nombre del curso es obligatorio</small
+      >
+    </div>
+
+    <!-- Campo para la fecha de inicio -->
+    <div class="field">
+      <label for="fechaInicio">Fecha de inicio</label>
+      <p-calendar
+        id="fechaInicio"
+        formControlName="fechaInicio"
+        dateFormat="yy-mm-dd"
+        showIcon
+        placeholder="Seleccionar fecha de inicio"
+      ></p-calendar>
+      <small *ngIf="isFieldInvalid('fechaInicio')" class="p-error"
+      >La fecha de inicio es obligatoria</small
+      >
+    </div>
+
+    <!-- Campo para la fecha de fin -->
+    <div class="field">
+      <label for="fechaFin">Fecha de fin</label>
+      <p-calendar
+        id="fechaFin"
+        formControlName="fechaFin"
+        dateFormat="yy-mm-dd"
+        showIcon
+        placeholder="Seleccionar fecha de fin"
+      ></p-calendar>
+      <small *ngIf="isFieldInvalid('fechaFin')" class="p-error"
+      >La fecha de fin es obligatoria</small
+      >
+    </div>
+
+    <!-- Multiselect para asignaturas -->
+    <div class="field">
+      <label>Asignaturas</label>
+      <p-multiSelect
+        [options]="asignaturas"
+        formControlName="asignaturas"
+        optionLabel="nombre"
+      placeholder="Seleccionar asignaturas"
+      [filter]="true"
+      [virtualScroll]="true"
+      [itemSize]="30"
+      [maxSelectedLabels]="3"
+      [showToggleAll]="false"
+      ></p-multiSelect>
+      <small *ngIf="isFieldInvalid('asignaturas')" class="p-error"
+      >Seleccionar al menos una asignatura</small
+      >
+    </div>
+
+    <!-- Multiselect para alumnos -->
+    <div class="field">
+      <label>Alumnos</label>
+      <p-multiSelect
+        [options]="alumnos"
+        formControlName="alumnos"
+        optionLabel="dni"
+      placeholder="Seleccionar alumnos"
+      [filter]="true"
+      [virtualScroll]="true"
+      [itemSize]="30"
+      [maxSelectedLabels]="3"
+      [showToggleAll]="false"
+      > </p-multiSelect>
+      <small *ngIf="isFieldInvalid('alumnos')" class="p-error"
+      >Seleccionar al menos un alumno</small
+      >
+    </div>
+
+    <div class="field">
+      <button
+        type="submit"
+        pButton
+        label="Crear Curso"
+        [disabled]="cursoForm.invalid"
+        class="p-button-success"
+      ></button>
+    </div>
+  </form>
+</div>
