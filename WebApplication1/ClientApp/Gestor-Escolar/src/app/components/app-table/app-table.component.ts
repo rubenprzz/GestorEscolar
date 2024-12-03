@@ -17,6 +17,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import {FormComponent} from '../form/form.component';
 import {GenericCrudService} from '../../generic-crud.service';
 import {StyleClassModule} from 'primeng/styleclass';
+import {MenuComponent} from '../../menubar/menubar.component';
+import {environment} from '../../../environment';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-table',
@@ -41,7 +45,9 @@ import {StyleClassModule} from 'primeng/styleclass';
     DropdownModule,
     FormComponent,
     CommonModule,
-    StyleClassModule
+    StyleClassModule,
+    MenuComponent,
+    ConfirmDialogModule
   ],
   standalone: true,
   styles: [
@@ -55,7 +61,7 @@ export class AppTableComponent implements OnInit {
   @Input() globalFilterFields: string[] = [];
   @Input() rows: number = 10;
   @Input() rowsPerPageOptions: number[] = [10, 25, 50];
-  @Input() tableStyle: any = { 'min-width': '75rem' };
+  @Input() tableStyle: any = { 'min-width': '75rem', 'background-color':'#053f7c' ,'border-radius': '20px' };
   @Input() apiEndpoint: string = '';
   @Output() onEdit = new EventEmitter<any>();  // Emitir evento de edición
   @Output() onDelete = new EventEmitter<any>(); // Emitir evento de eliminación
@@ -66,8 +72,12 @@ export class AppTableComponent implements OnInit {
   displayDialog: boolean = false;
   formFields: any[] = [];
   selectedItem: any | null = null;
-  constructor(private readonly crudService: GenericCrudService, private readonly fb: FormBuilder) {
+  protected readonly apiUrl = environment.apiUrl
+  constructor(private readonly crudService: GenericCrudService, private readonly fb: FormBuilder,private sanitizer: DomSanitizer) {
 
+  }
+  getImageUrl(urlFoto: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(urlFoto);
   }
 
 
@@ -99,6 +109,7 @@ export class AppTableComponent implements OnInit {
     // Inicializa el formulario
     this.initForm();
   }
+
   initForm() {
     const group: any = {};
     this.formFields.forEach((field) => {

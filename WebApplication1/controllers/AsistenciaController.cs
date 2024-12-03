@@ -32,6 +32,16 @@ public class AsistenciaController : ControllerBase
         }
         return Ok(asistencia);
     }
+    [HttpGet("alumno/{id}")]
+    public async Task<ActionResult<Asistencia>> GetAsistenciaPorAlumnoId(int id)
+    {
+        var asistencia = await _asistenciaService.ObtenerAsistenciaPorAlumnoId(id);
+        if (asistencia == null)
+        {
+            return NotFound();
+        }
+        return Ok(asistencia);
+    }
     
     [HttpGet("identificador/{identificador}")]
     

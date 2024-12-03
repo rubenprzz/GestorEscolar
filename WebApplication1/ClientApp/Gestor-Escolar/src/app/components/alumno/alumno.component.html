@@ -1,8 +1,11 @@
 <app-table
   [data]="alumnos"
   [columns]="columns"
-  [globalFilterFields]="['nombre', 'apellidos', 'dni', 'curso', 'cantidadAsistenciasFaltadas']"
+  [globalFilterFields]="['nombre', 'apellidos', 'dni', 'curso', 'urlFoto']"
   (onEdit)="editAlumno($event)"
   (onDelete)="deleteAlumno($event.id)"
-  (onAdd)="openNew()"
-></app-table>
+  (onAdd)="openNew()">
+
+
+</app-table>
+

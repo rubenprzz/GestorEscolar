@@ -1,3 +1,4 @@
+<app-menu></app-menu>
 <p-toast></p-toast>
 
 <!-- Toolbar -->
@@ -34,6 +35,7 @@
   [rowsPerPageOptions]="rowsPerPageOptions"
   [globalFilterFields]="globalFilterFields"
   [tableStyle]="tableStyle"
+  class="bg-blue-900 border-round-lg surface-border"
   [(selection)]="selectedItems"
   [rowHover]="true"
   dataKey="id"
@@ -73,16 +75,27 @@
         <p-tableCheckbox [value]="item"></p-tableCheckbox>
       </td>
       <td *ngFor="let col of columns">
-        <span>{{ item[col.field] }}</span>
+        <ng-container *ngIf="col.field === 'urlFoto'">
+          <img
+            [src]="getImageUrl(item[col.field])"
+            width="50"
+            alt="Foto"
+            class="border-round"
+            style="object-fit: cover;"
+          />
+        </ng-container>
+        <ng-container *ngIf="col.field !== 'urlFoto'">
+          <span>{{ item[col.field] }}</span>
+        </ng-container>
       </td>
       <td>
         <p-button
-          icon="pi pi-plus"
+          icon="pi pi-pencil"
           class="mr-2"
           [rounded]="true"
           [outlined]="true"
           severity="success"
-          (onClick)="openNew()"
+          (onClick)="editItem(item)"
         ></p-button>
         <p-button
           icon="pi pi-trash"
@@ -109,6 +122,3 @@
     </div>
   </ng-template>
 </p-table>
-
-<!-- Dialog -->
-

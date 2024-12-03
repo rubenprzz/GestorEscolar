@@ -22,9 +22,10 @@ export class AlumnoService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  updateAlumno(alumno: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${alumno.id}`, alumno);
+  updateAlumno(id: string, formData: FormData): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, formData);
   }
+
 
   deleteAlumno(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);

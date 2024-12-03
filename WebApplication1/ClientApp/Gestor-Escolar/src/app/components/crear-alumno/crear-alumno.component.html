@@ -1,6 +1,5 @@
 <div class="card">
   <form [formGroup]="alumnoForm" (ngSubmit)="onSubmit()">
-    <!-- Nombre -->
     <div class="p-inputgroup">
       <span class="p-inputgroup-addon">
         <i class="pi pi-user"></i>
@@ -14,7 +13,6 @@
     </div>
     <small *ngIf="isFieldInvalid('nombre')" class="p-error">Nombre es obligatorio.</small>
 
-    <!-- Apellidos -->
     <div class="p-inputgroup mt-3">
       <span class="p-inputgroup-addon">
         <i class="pi pi-user"></i>
@@ -28,7 +26,6 @@
     </div>
     <small *ngIf="isFieldInvalid('apellidos')" class="p-error">Apellidos son obligatorios.</small>
 
-    <!-- DNI -->
     <div class="p-inputgroup mt-3">
       <span class="p-inputgroup-addon">
         <i class="pi pi-id-card"></i>
@@ -42,7 +39,7 @@
     </div>
     <small *ngIf="isFieldInvalid('dni')" class="p-error">DNI es obligatorio.</small>
 
-    <!-- Fecha de Nacimiento -->
+
     <div class="p-inputgroup mt-3">
       <span class="p-inputgroup-addon">
         <i class="pi pi-calendar"></i>
@@ -103,7 +100,6 @@
     </div>
     <small *ngIf="isFieldInvalid('foto')" class="p-error">La foto es obligatoria.</small>
 
-    <!-- Curso -->
     <div class="p-inputgroup mt-3">
       <span class="p-inputgroup-addon">
         <i class="pi pi-book"></i>

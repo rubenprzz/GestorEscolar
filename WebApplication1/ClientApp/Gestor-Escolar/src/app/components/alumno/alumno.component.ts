@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {AlumnoService} from '../../services/alumno.service';
 import {AppTableComponent} from '../app-table/app-table.component';
-import {MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {DialogModule} from 'primeng/dialog';
 import {InputTextModule} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
 import {Button} from 'primeng/button';
-import {DialogService} from 'primeng/dynamicdialog';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import { CrearAlumnoComponent } from '../crear-alumno/crear-alumno.component';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 
 @Component({
@@ -17,7 +19,8 @@ import { CrearAlumnoComponent } from '../crear-alumno/crear-alumno.component';
     DialogModule,
     InputTextModule,
     FormsModule,
-    Button
+    Button,
+    ConfirmDialogModule
   ],
   standalone: true,
   templateUrl: './alumno.component.html'
@@ -25,20 +28,71 @@ import { CrearAlumnoComponent } from '../crear-alumno/crear-alumno.component';
 export class AlumnoComponent implements OnInit {
   alumnos: any[] = [];
   displayDialog: boolean = false;
+  displayConfirmDialog: boolean = false;
   selectedAlumno: any = {};
   columns = [
     { field: 'nombre', header: 'Nombre', width: '16%', type: 'text' },
     { field: 'apellidos', header: 'Apellidos', width: '16%', type: 'text' },
     { field: 'dni', header: 'DNI', width: '16%', type: 'text' },
     { field: 'curso', header: 'Curso', width: '16%', type: 'text' },
+    { field: 'urlFoto' , header: 'Foto', width: '16%', type: 'image' },
   ];
+  getImageUrl(urlFoto: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(urlFoto);
+  }
 
-  constructor(private readonly alumnoService: AlumnoService , private readonly messageService: MessageService,    private readonly dialogService: DialogService
-  ) {}
+
+  constructor(private readonly alumnoService: AlumnoService , private readonly messageService: MessageService,    private readonly dialogService: DialogService, private readonly sanitizer: DomSanitizer,
+  private readonly confirmationService:ConfirmationService) {}
 
   ngOnInit() {
     this.cargarAlumnos();
   }
+  alumnoToDelete: any = null; // Variable para almacenar el alumno a eliminar
+
+  confirmDelete(item: any): void {
+    this.alumnoToDelete = item;  // Guardamos el alumno a eliminar
+    this.displayConfirmDialog = true; // Mostramos el cuadro de confirmación
+  }
+
+  // Eliminar el alumno si se confirma
+  /*confirm1(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Are you sure that you want to proceed?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon:"none",
+      rejectIcon:"none",
+      rejectButtonStyleClass:"p-button-text",
+      accept: () => {
+        this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+      }
+    });
+  }
+
+  confirm2(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Do you want to delete this record?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass:"p-button-danger p-button-text",
+      rejectButtonStyleClass:"p-button-text p-button-text",
+      acceptIcon:"none",
+      rejectIcon:"none",
+
+      accept: () => {
+        this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+      }
+    });
+  }*/
 
   cargarAlumnos() {
     this.alumnoService.getAlumnos().subscribe({
@@ -52,8 +106,19 @@ export class AlumnoComponent implements OnInit {
   }
 
   editAlumno(alumno: any): void {
-    this.selectedAlumno = { ...alumno };  // Copiar los datos del alumno
-    this.displayDialog = true;  // Mostrar el diálogo
+    const ref: DynamicDialogRef = this.dialogService.open(CrearAlumnoComponent, {
+      header: 'Editar Alumno',
+      width: '70%',
+      data: { alumnoToEdit: alumno }
+    });
+
+    ref.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarAlumnos();  // Recargar los alumnos si se editó correctamente
+        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Alumno actualizado correctamente.'});
+      }
+    });
+    this.cargarAlumnos();
   }
 
   saveAlumno() {

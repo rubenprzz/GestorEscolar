@@ -14,4 +14,7 @@ export class CursoService {
   getCursos(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
+  createCurso(curso: any): Observable<any> {
+    return this.http.post(this.apiUrl, curso);
+  }
 }

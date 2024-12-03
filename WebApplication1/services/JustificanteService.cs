@@ -48,6 +48,36 @@ namespace WebApplication1.Services
 
             return justificanteViewModel;
         }
+        public async Task<List<JustificanteViewModel>> obtenerJustificantesPorAlumnoId(int id)
+        {
+            var justificantes = await _context.Justificantes
+                .Include(j => j.Alumno) // Incluye Alumno
+                .Include(j => j.Asistencia) // Incluye Asistencia
+                .ThenInclude(a => a.Asignatura) // Incluye Asignatura
+                .ThenInclude(asig => asig.Profesor) // Incluye Profesor
+                .Where(j => j.AlumnoId == id)
+                .AsSplitQuery() // Usar múltiples consultas
+                .ToListAsync();
+
+            var justificantesViewModel = justificantes
+                .Select(j => new JustificanteViewModel
+                {
+                    Id = j.Id,
+                    FechaJustificacion = j.FechaJustificacion,
+                    Descripcion = j.Descripcion,
+                    Alias = j.Alias,
+                    Motivo = j.Motivo,
+
+                    AsistenciaIdentificador = j.Asistencia.Identificador,
+                    AsistenciaIsPresente = j.Asistencia.IsPresente,
+                    AlumnoDni = j.Alumno.Dni,
+
+                    AsignaturaNombre = j.Asistencia.Asignatura.Nombre,
+                })
+                .ToList();
+
+            return justificantesViewModel;
+        }
         public async Task<Justificante> CreateJustificante(createJustificanteDto dto)
         {
             // Validar la asistencia por identificador

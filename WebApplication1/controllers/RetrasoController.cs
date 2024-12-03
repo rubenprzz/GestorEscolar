@@ -21,6 +21,16 @@ public class RetrasoController: ControllerBase
         var retrasos = await _retrasoService.ObtenerTodosLosRetrasos();
         return Ok(retrasos);
     }
+    [HttpGet("alumno/{id}")]
+    public async Task<ActionResult<Retraso>> GetRetrasosPorIdAlumno(int id)
+    {
+        var retrasos = await _retrasoService.ObtenerRetrasosPorIdAlumno(id);
+        if (retrasos == null)
+        {
+            return NotFound();
+        }
+        return Ok(retrasos);
+    }
     
     [HttpGet("{id}")]
     public async Task<ActionResult<Retraso>> GetRetraso(int id)

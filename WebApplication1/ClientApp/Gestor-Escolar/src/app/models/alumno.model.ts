@@ -14,6 +14,7 @@ export interface Alumno {
   telefono: string;
   cursoId: number;
   cursoNombre: string;
+  urlFoto: string;
   padres: Padre[];
   cantidadAsistenciasFaltadas: number;
   cantidadRetrasos: number;

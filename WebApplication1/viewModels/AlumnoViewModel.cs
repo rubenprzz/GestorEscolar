@@ -16,8 +16,23 @@ namespace WebApplication1.ViewModels
         public List<string> Justificantes { get; set; }
         public List<int> Notas { get; set; }    // Notas del alumno
         public int CantidadRetrasos { get; set; } // Número de retrasos
-        public string urlFoto { get; set; }
+        private string _urlFotoL; // Campo privado para almacenar la URL relativa
 
+        public string UrlFotoL
+        {
+            get => _urlFotoL;
+            set => _urlFotoL = value;
+        }
+
+        public string urlFoto
+        {
+            get => $"http://localhost:5202{_urlFotoL}";
+            set
+            {
+                // Solo actualiza _urlFotoL con la parte relativa
+                _urlFotoL = value.Replace("http://localhost:5202/", string.Empty);
+            }
+        }
         public int CantidadAsistenciasFaltadas { get; set; } // Número de faltas en asistencias
 
     }

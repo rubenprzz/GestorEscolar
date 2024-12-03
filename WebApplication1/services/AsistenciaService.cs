@@ -38,6 +38,27 @@ namespace WebApplication1.Services
                 })
                 .ToListAsync();
         }
+        public async Task<AsistenciaViewModel?> ObtenerAsistenciaPorAlumnoId(int id)
+        {
+            return await _context.Asistencias
+                .Include(a => a.Alumno)
+                .Include(a => a.Asignatura)
+                .Select(a => new AsistenciaViewModel
+                {
+                    Id = a.Id,
+                    Dia = a.DiaSemana,
+                    HoraInicio = a.HoraInicio,
+                    HoraFin = a.HoraFin,
+                    IsPresente = a.IsPresente,
+                    AlumnoNombre = a.Alumno.Nombre,
+                    AlumnoId = a.Alumno.Id,
+                    AlumnoDni = a.Alumno.Dni,
+                    Identificador = a.Identificador,
+                    AsignaturaId = a.Asignatura.Id,
+                    AsignaturaNombre = a.Asignatura.Nombre
+                })
+                .FirstOrDefaultAsync(a => a.AlumnoId == id);
+        }
 
 
         public async Task<AsistenciaViewModel?> ObtenerAsistenciaPorId(int id)

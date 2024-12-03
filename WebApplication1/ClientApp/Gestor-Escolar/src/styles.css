@@ -1,11 +1,18 @@
-@import "primeng/resources/themes/lara-dark-blue/theme.css";
+@import "primeng/resources/themes/lara-dark-green/theme.css";
 @import "primeng/resources/primeng.css";
 html {
-  font-size: 14px;
+  font-size: 15px;
 }
 
+
+* {
+            font-family: "Open Sans", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+
+            font-style: normal;
+          }
 body {
-  font-family: var(--font-family);
   font-weight: normal;
   background: var(--surface-ground);
   color: var(--text-color);

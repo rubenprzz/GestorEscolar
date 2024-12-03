@@ -148,17 +148,18 @@ namespace WebApplication1.Services
         
         public async Task<Curso> AgregarCurso(createCursoDto createCursoDto)
         {
+            // Crear el nuevo curso con los datos del DTO
             var nuevoCurso = new Curso
             {
                 Nombre = createCursoDto?.Nombre,
-                FechaInicio = createCursoDto.FechaInicio ?? DateOnly.MinValue, // Valor por defecto
-                FechaFin = createCursoDto.FechaFin ?? DateOnly.MinValue,       // Valor por defecto
-                Alumnos = new List<Alumno>()
+                FechaInicio = createCursoDto?.FechaInicio ?? DateOnly.MinValue, // Valor por defecto
+                FechaFin = createCursoDto?.FechaFin ?? DateOnly.MinValue,
+                Asignaturas = new List<Asignatura>(), // Inicializa la lista de asignaturas
+                Alumnos = new List<Alumno>() // Inicializa la lista de alumnos
             };
 
-
             var alumnosSeleccionados = await _context.Alumnos
-                .Where(a => createCursoDto.AlumnosSeleccionados.Contains(a.Dni))
+                .Where(a => createCursoDto.alumnos.Contains(a.Dni))
                 .ToListAsync();
 
             foreach (var alumno in alumnosSeleccionados)
@@ -166,12 +167,24 @@ namespace WebApplication1.Services
                 nuevoCurso.Alumnos.Add(alumno);
             }
 
-            _context.Cursos.Add(nuevoCurso);
+            var asignaturasSeleccionadas = await _context.Asignaturas
+                .Where(a => createCursoDto.asignaturas.Contains(a.Nombre)) // Suponiendo que estás buscando por el nombre de la asignatura
+                .ToListAsync();
 
+            // Asociar las asignaturas al curso
+            foreach (var asignatura in asignaturasSeleccionadas)
+            {
+                nuevoCurso.Asignaturas.Add(asignatura);
+            }
+
+            // Agregar el nuevo curso al contexto y guardar los cambios
+            _context.Cursos.Add(nuevoCurso);
             await _context.SaveChangesAsync();
 
+            // Retornar el nuevo curso con las asignaturas y los alumnos
             return nuevoCurso;
         }
+
 
 
 

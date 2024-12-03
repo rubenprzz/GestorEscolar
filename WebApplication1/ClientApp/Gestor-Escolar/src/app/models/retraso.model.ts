@@ -5,12 +5,10 @@ export class Retraso {
   id?: number;
   fecha?: Date;
   minutosRetraso?: number;
-  alumnoId?: number;
-  alumno?: Alumno; // Relación con Alumno
+  alumnoDni?: number;
   justificado?: boolean;
   motivo?: string;
-  asignaturaId?: number;
-  asignatura?: string;
+  asignaturaNombre?: string;
 
 
 }

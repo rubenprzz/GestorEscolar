@@ -50,6 +50,24 @@ namespace WebApplication1.Services
                 })
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
+
+        public async Task<RetrasoViewModel?> ObtenerRetrasosPorIdAlumno(int id)
+        {
+            return await _context.Retrasos
+                .Include(r => r.Alumno)
+                .Select(r => new RetrasoViewModel
+                {
+                    Id = r.Id,
+                    Fecha = r.Fecha,
+                    alumnoDni = r.Alumno.Dni,
+                    MinutosRetraso = r.MinutosRetraso,
+                    Motivo = r.Motivo,
+                    alumnoNombre = r.Alumno.Nombre,
+                    Justificado = r.Justificado,
+                    asignaturaNombre = r.Asignatura.Nombre
+                })
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
         
 
         public async Task<Retraso> AgregarRetraso(Retraso retraso)

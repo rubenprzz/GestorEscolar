@@ -30,7 +30,18 @@ public class JustificanteController : ControllerBase
 
         return Ok(justificantes);
     }
-    //obtener por fecha
+    [HttpGet("alumno/{id}")]
+    
+    public async Task<ActionResult<List<JustificanteViewModel>>> GetJustificantesPorAlumnoId(int id)
+    {
+        var justificantes = await _justificanteService.obtenerJustificantesPorAlumnoId(id);
+        if (justificantes == null)
+        {
+            return NotFound();
+        }
+        return Ok(justificantes);
+    }
+    
     
     [HttpGet("fecha/{fecha}")]
     public async Task<ActionResult<Justificante> > GetJustificantePorFecha(DateOnly fecha)

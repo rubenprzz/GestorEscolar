@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MessageService} from 'primeng/api';
 import {NgClass, NgIf} from '@angular/common';
@@ -27,7 +27,7 @@ import {FileUploadModule} from 'primeng/fileupload';
 export class CrearAlumnoComponent implements OnInit {
   alumnoForm: FormGroup = new FormGroup({});
   cursos: any[] = [];
-
+  @Input() alumnoToEdit: any;
 
   constructor(private readonly fb: FormBuilder, private readonly alumnoService: AlumnoService, private readonly messageService: MessageService, private readonly cursoService: CursoService) {
   }
@@ -36,6 +36,20 @@ export class CrearAlumnoComponent implements OnInit {
     this.initializeForm();
     this.loadCursos();  // Cargar los cursos cuando se inicializa el componente
 
+    // Si existe un alumno a editar, cargar sus datos en el formulario
+    if (this.alumnoToEdit) {
+      this.alumnoForm.patchValue({
+        nombre: this.alumnoToEdit.nombre,
+        apellidos: this.alumnoToEdit.apellidos,
+        dni: this.alumnoToEdit.dni,
+        fechaNacimiento: new Date(this.alumnoToEdit.fechaNacimiento),
+        email: this.alumnoToEdit.email,
+        telefono: this.alumnoToEdit.telefono,
+        foto: this.alumnoToEdit.foto, // Si ya existe una foto, cargarla
+        cursoNombre: this.alumnoToEdit.cursoNombre,
+        padresDnis: this.alumnoToEdit.padresDnis?.join(', '), // Si es un array, unir los DNIs
+      });
+    }
   }
 
   initializeForm() {
@@ -77,7 +91,6 @@ export class CrearAlumnoComponent implements OnInit {
 
     const formData = new FormData();
 
-    // Agregar los datos del formulario al FormData
     formData.append('nombre', this.alumnoForm.get('nombre')?.value);
     formData.append('apellidos', this.alumnoForm.get('apellidos')?.value);
     formData.append('dni', this.alumnoForm.get('dni')?.value);
@@ -103,26 +116,40 @@ export class CrearAlumnoComponent implements OnInit {
       });
     }
 
-    // Realizar la solicitud HTTP POST
-    this.alumnoService.createAlumno(formData).subscribe({
-      next: () => {
-        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Alumno creado'});
-        this.alumnoForm.reset();  // Reiniciar el formulario
-      },
-      error: (err) => {
-        console.error('Error al crear el alumno:', err);
-        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear el alumno'});
-      }
-    });
-  }
-/*  onCursoChange(event: any) {
-    const selectedCurso = event.value;
-    if (selectedCurso && selectedCurso.nombre) {
-      this.alumnoForm.patchValue({
-        cursoNombre: selectedCurso.nombre
+    if (this.alumnoToEdit) {
+      // Actualizar el alumno
+      this.alumnoService.updateAlumno(this.alumnoToEdit.id, formData).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Alumno actualizado' });
+        },
+        error: (err) => {
+          console.error('Error al actualizar el alumno:', err);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el alumno' });
+        }
+      });
+    } else {
+      // Crear nuevo alumno
+      this.alumnoService.createAlumno(formData).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Alumno creado' });
+          this.alumnoForm.reset();
+        },
+        error: (err) => {
+          console.error('Error al crear el alumno:', err);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el alumno' });
+        }
       });
     }
-  }*/
+  }
+
+  /*  onCursoChange(event: any) {
+      const selectedCurso = event.value;
+      if (selectedCurso && selectedCurso.nombre) {
+        this.alumnoForm.patchValue({
+          cursoNombre: selectedCurso.nombre
+        });
+      }
+    }*/
 
   onFileChange(event: any) {
     const file = event.target.files[0];
