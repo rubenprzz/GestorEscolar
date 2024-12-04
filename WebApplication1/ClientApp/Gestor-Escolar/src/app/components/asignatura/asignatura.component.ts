@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {AppTableComponent} from '../app-table/app-table.component';
 import {AsignaturaService} from '../../services/asignatura.service';
+import {CrearAlumnoComponent} from '../crear-alumno/crear-alumno.component';
+import { DialogService } from 'primeng/dynamicdialog';
+import {MessageService} from 'primeng/api';
+import {CreateAsignaturaComponent} from '../../create-asignatura/create-asignatura.component';
 
 @Component({
   selector: 'app-asignatura',
@@ -31,7 +35,22 @@ export class AsignaturaComponent implements OnInit {
     { field: 'horasInicio', header: 'Hora Inicio', width: '16%', type: 'text' },
     { field: 'horasFin', header: 'Hora Fin', width: '16%', type: 'text' },
   ];
-  constructor(private readonly as: AsignaturaService) {
+  constructor(private readonly as: AsignaturaService, private readonly dialogService: DialogService, private readonly asigService: AsignaturaService, private readonly messageService: MessageService) { }
+
+  openNew() {
+    // Abre el dialog que contiene el formulario de crear alumno
+    const dialogRef = this.dialogService.open(CreateAsignaturaComponent, {
+      header: 'Crear Nueva Asignatura',  // Título del diálogo
+      width: '70%',
+    });
+
+    // Opcional: puedes escuchar si el alumno se crea correctamente
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarAsignaturas();  // Recargar los alumnos si se crea uno nuevo
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Alumno creado correctamente.'});
+      }
+    });
   }
 
   ngOnInit() {

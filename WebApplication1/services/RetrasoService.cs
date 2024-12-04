@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication1.Context;
+using WebApplication1.dtos.create;
 using WebApplication1.Models;
 using WebApplication1.ViewModels;
 
@@ -13,25 +14,7 @@ namespace WebApplication1.Services
         {
             _context = context;
         }
-
-        public async Task<List<RetrasoViewModel>> ObtenerTodosLosRetrasos()
-        {
-            return await _context.Retrasos
-                .Include(r => r.Alumno)  
-                .Select(r => new RetrasoViewModel
-                {
-                    Id = r.Id,
-                    Fecha = r.Fecha,
-                    alumnoDni = r.Alumno.Dni,
-                    MinutosRetraso = r.MinutosRetraso,
-                    Motivo = r.Motivo,
-                    alumnoNombre = r.Alumno.Nombre  ,
-                    Justificado = r.Justificado,
-                    asignaturaNombre = r.Asignatura.Nombre
-                })
-                .ToListAsync();
-        }
-
+        
 
         public async Task<RetrasoViewModel?> ObtenerRetrasoPorId(int id)
         {
@@ -40,13 +23,18 @@ namespace WebApplication1.Services
                 .Select(r => new RetrasoViewModel
                 {
                     Id = r.Id,
-                    Fecha = r.Fecha,
+                    Fecha = r.Fecha.ToString("yyyy-MM-dd"), // Formatear la fecha
                     alumnoDni = r.Alumno.Dni,
                     MinutosRetraso = r.MinutosRetraso,
                     Motivo = r.Motivo,
                     alumnoNombre = r.Alumno.Nombre,
                     Justificado = r.Justificado,
-                    asignaturaNombre = r.Asignatura.Nombre
+                    asignaturaNombre = r.Asignatura.Nombre,
+                    HoraInicio = r.Asignatura.HorasDeClase.FirstOrDefault() != null 
+                        ? r.Asignatura.HorasDeClase.FirstOrDefault().HoraInicio 
+                        : TimeSpan.Zero
+                    
+                    
                 })
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
@@ -58,7 +46,7 @@ namespace WebApplication1.Services
                 .Select(r => new RetrasoViewModel
                 {
                     Id = r.Id,
-                    Fecha = r.Fecha,
+                    Fecha = r.Fecha.ToString("yyyy-MM-dd"), // Formatear la fecha
                     alumnoDni = r.Alumno.Dni,
                     MinutosRetraso = r.MinutosRetraso,
                     Motivo = r.Motivo,
@@ -70,12 +58,75 @@ namespace WebApplication1.Services
         }
         
 
-        public async Task<Retraso> AgregarRetraso(Retraso retraso)
+        public async Task<List<RetrasoViewModel>> ObtenerTodosLosRetrasos()
         {
+            return await _context.Retrasos
+                .Include(r => r.Alumno)
+                .Include(r => r.Asignatura)
+                .ThenInclude(a => a.HorasDeClase)
+                .Select(r => new RetrasoViewModel
+                {
+                    Id = r.Id,
+                    Fecha = r.Fecha.ToString("yyyy-MM-dd"),
+                    alumnoDni = r.Alumno.Dni,
+                    alumnoNombre = r.Alumno.Nombre,
+                    MinutosRetraso = r.MinutosRetraso,
+                    Motivo = r.Motivo,
+                    Justificado = r.Justificado,
+                    asignaturaNombre = r.Asignatura.Nombre,
+                    HoraInicio = r.Asignatura.HorasDeClase.Count > 0 
+                        ? r.Asignatura.HorasDeClase.First().HoraInicio 
+                        : TimeSpan.Zero, 
+                    HoraLlegada = r.HoraLlegada 
+                })
+                .ToListAsync();
+        }
+
+        public async Task<Retraso> AgregarRetraso(createRetrasoDto createDto)
+        {
+            // Convertir la fecha recibida a UTC
+            var fechaUtc = DateTime.SpecifyKind(DateTime.Parse(createDto.Fecha), DateTimeKind.Utc);
+
+            // Obtener la asignatura y su hora de inicio
+            var asignatura = await _context.Asignaturas
+                .Include(a => a.HorasDeClase)
+                .FirstOrDefaultAsync(a => a.Nombre == createDto.AsignaturaNombre);
+
+            if (asignatura == null || !asignatura.HorasDeClase.Any())
+                throw new Exception("La asignatura no tiene horas de clase definidas.");
+
+            var horaInicio = asignatura.HorasDeClase.First().HoraInicio;
+
+            // Obtener el alumno
+            var alumno = await _context.Alumnos.FirstOrDefaultAsync(a => a.Dni == createDto.AlumnoDni);
+            if (alumno == null)
+            {
+                throw new Exception($"Alumno con DNI {createDto.AlumnoDni} no encontrado.");
+            }
+
+            // Crear el objeto Retraso
+            var retraso = new Retraso
+            {
+                Fecha = fechaUtc,
+                AlumnoId = alumno.Id,
+                HoraLlegada = createDto.HoraLlegada,
+                Motivo = createDto.Motivo,
+                Justificado = createDto.Justificado,
+                AsignaturaId = asignatura.Id,
+            };
+
+            // Calcular minutos de retraso
+            retraso.MinutosRetraso = retraso.CalcularMinutosDeRetraso(horaInicio);
+
+            // Guardar en la base de datos
             _context.Retrasos.Add(retraso);
             await _context.SaveChangesAsync();
+
             return retraso;
         }
+
+
+
 
         public async Task<Retraso> ActualizarRetraso(Retraso retraso)
         {

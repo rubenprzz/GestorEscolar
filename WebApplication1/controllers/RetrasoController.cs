@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.dtos.create;
 using WebApplication1.Models;
 using WebApplication1.Services;
 
@@ -44,7 +45,7 @@ public class RetrasoController: ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<Retraso>> CreateRetraso([FromBody] Retraso retraso)
+    public async Task<ActionResult<Retraso>> CreateRetraso([FromBody] createRetrasoDto retraso)
     {
         if (retraso == null)
         {

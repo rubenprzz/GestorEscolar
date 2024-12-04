@@ -18,4 +18,7 @@ export class ProfesorService {
   getProfesores(): Observable<any> {
     return this.http.get(this.apiUrl)
   }
+  createProfesor(profesor: any): Observable<any> {
+    return this.http.post(this.apiUrl, profesor);
+  }
 }

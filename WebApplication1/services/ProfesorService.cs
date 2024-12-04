@@ -35,12 +35,12 @@ namespace WebApplication1.Services
                 })
                 .ToListAsync();
         }
-
-
+        // Obtener un profesor por su id
         public async Task<ProfesorViewModel?> ObtenerProfesorPorId(int id)
         {
             return await _context.Profesores
                 .Include(p => p.Asignaturas)
+                .Where(p => p.Id == id)
                 .Select(p => new ProfesorViewModel
                 {
                     Id = p.Id,
@@ -55,34 +55,41 @@ namespace WebApplication1.Services
                         Nombre = a.Nombre
                     }).ToList()
                 })
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync();
         }
-        
 
-        public async Task<Profesor?> AgregarProfesor(createProfesorDto dto)
+
+      
+
+        public async Task<Profesor> AgregarProfesor(createProfesorDto createDto)
         {
-            var asignatura = await _context.Asignaturas.FirstOrDefaultAsync(a => a.Nombre == dto.asignaturaNombre);
-    
-            // Verificar que la asignatura exista
-            if (asignatura == null)
-                return null;
+            var asignaturas = await _context.Asignaturas
+                .Where(a => createDto.asignaturasId.Contains(a.Id))
+                .ToListAsync();
 
-            var nuevoProfesor = new Profesor
+            if (!asignaturas.Any())
             {
-                Nombre = dto.Nombre,
-                Apellidos = dto.Apellidos,
-                Dni = dto.Dni,
-                Email = dto.Email,
-                Telefono = dto.Telefono,
-                Asignaturas = new List<Asignatura> { asignatura }
+                throw new Exception("No se encontraron asignaturas con los nombres proporcionados.");
+            }
+
+            var profesor = new Profesor
+            {
+                Nombre = createDto.Nombre,
+                Apellidos = createDto.Apellidos,
+                Dni = createDto.Dni,
+                Email = createDto.Email,
+                Telefono = createDto.Telefono,
+                Asignaturas = asignaturas 
             };
 
-            _context.Profesores.Add(nuevoProfesor);
+            // Agregar el profesor a la base de datos
+            _context.Profesores.Add(profesor);
             await _context.SaveChangesAsync();
 
-            return nuevoProfesor;
+            return profesor;
         }
 
+     
 
 
         public async Task<Profesor> ActualizarProfesor(Profesor profesor)

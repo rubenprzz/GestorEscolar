@@ -65,7 +65,7 @@
       <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style]="col.style">
         {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
       </th>
-      <th style="min-width: 10rem;">Actions</th>
+      <th style="min-width: 10rem;">Acciones</th>
     </tr>
   </ng-template>
 
@@ -118,7 +118,7 @@
 
   <ng-template pTemplate="summary">
     <div class="flex align-items-center justify-content-between">
-      In total there are {{ data.length }} items.
+      En total hay {{ data.length }} datos.
     </div>
   </ng-template>
 </p-table>

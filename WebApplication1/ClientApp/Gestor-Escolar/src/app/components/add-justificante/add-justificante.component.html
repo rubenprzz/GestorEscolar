@@ -1,4 +1,4 @@
-<div class="card" style="max-width: 600px; margin: auto;">
+<div class="card" style="max-width: 200px; height: 600px; margin: auto;">
   <form [formGroup]="justificanteForm" (ngSubmit)="onSubmit()">
     <!-- Alias (Autogenerado) -->
     <div class="p-inputgroup">
@@ -55,10 +55,10 @@
         [ngClass]="{'ng-invalid': isFieldInvalid('motivo')}">
     </div>
     <small *ngIf="isFieldInvalid('motivo')" class="p-error">
-     El motivo es obligatorio.
+      El motivo es obligatorio.
     </small>
 
-    <div  class="p-inputgroup mt-3 ">
+    <div class="p-inputgroup mt-3 ">
       <span class="p-inputgroup-addon">
         <i class="pi pi-id-card"></i>
       </span>

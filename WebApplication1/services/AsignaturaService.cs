@@ -64,44 +64,52 @@ namespace WebApplication1.Services
         }
         public async Task<Asignatura> AgregarAsignatura(createAsignaturaDto dto)
         {
+            // Buscar al profesor asociado por su DNI
             var profesor = await _context.Profesores
-                .FirstOrDefaultAsync(p => p.Dni == dto.profesorDni);
+                .FirstOrDefaultAsync(p => p.Dni == dto.ProfesorDni);
 
             if (profesor == null)
-                return null;
-            var cursos = await _context.Cursos
-                .Where(c => dto.cursoNombres.Contains(c.Nombre))
-                .ToListAsync();
+                throw new Exception("El profesor especificado no existe.");
 
-            var asignaturaNueva = _mappingProfile.Map<Asignatura>(dto);
-            asignaturaNueva.Profesor = profesor;
-            asignaturaNueva.Cursos = cursos;
+            // Buscar el curso asociado
+            var curso = await _context.Cursos
+                .FirstOrDefaultAsync(c => c.Nombre == dto.CursoNombres);
 
-            
-            if (asignaturaNueva.HorasDeClase == null)
+            if (curso == null)
+                throw new Exception("El curso especificado no existe.");
+
+            // Crear la nueva asignatura
+            var asignaturaNueva = new Asignatura
             {
-                asignaturaNueva.HorasDeClase = new List<Hora>();
-            }
+                Nombre = dto.Nombre,
+                Profesor = profesor,
+                ProfesorId = profesor.Id,
+                Cursos = new List<Curso> { curso },
+                HorasDeClase = new List<Hora>() // Inicializamos la lista de horas
+            };
 
-            for (int i = 0; i < dto.horasInicio.Count; i++)
+            // Crear las horas de clase asociadas
+            for (int i = 0; i < dto.HorasInicio.Count; i++)
             {
                 var hora = new Hora
                 {
                     Asignatura = asignaturaNueva,
                     AsignaturaId = asignaturaNueva.Id,
-                    Dia = Enum.Parse<DiaSemana>(dto.dias[i]), 
-                    HoraInicio = TimeSpan.Parse(dto.horasInicio[i]), // Convierte la hora de inicio en TimeSpan
-                    HoraFin = TimeSpan.Parse(dto.horasFin[i]) // Convierte la hora de fin en TimeSpan
+                    Dia = Enum.Parse<DiaSemana>(dto.Dias[i]), // Convertir el día en enum
+                    HoraInicio = TimeSpan.Parse(dto.HorasInicio[i]), // Convertir la hora de inicio en TimeSpan
+                    HoraFin = TimeSpan.Parse(dto.HorasFin[i]) // Convertir la hora de fin en TimeSpan
                 };
 
-                asignaturaNueva.HorasDeClase.Add(hora);
+                asignaturaNueva.HorasDeClase.Add(hora); // Añadir la hora a la lista de horas de clase
             }
 
+            // Guardar la nueva asignatura en la base de datos
             _context.Asignaturas.Add(asignaturaNueva);
             await _context.SaveChangesAsync();
 
             return asignaturaNueva;
         }
+
 
 
 

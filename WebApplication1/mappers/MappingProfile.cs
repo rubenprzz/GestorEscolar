@@ -25,11 +25,12 @@ namespace WebApplication1.Mappers
                .ForMember(dest => dest.Curso, opt => opt.MapFrom(src => src.Curso.Nombre))
                .ForMember(dest => dest.Justificantes, opt => opt.MapFrom(src => src.Justificantes.Select(j => j.Descripcion).ToList()));
 
-           CreateMap<createAsignaturaDto, Asignatura>()
+           /*CreateMap<createAsignaturaDto, Asignatura>()
                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.nombre))
                .ForMember(dest => dest.Profesor, opt => opt.Ignore())
                .ForMember(dest => dest.Cursos, opt => opt.Ignore())
                .ForMember(dest => dest.HorasDeClase, opt => opt.Ignore());  
+               */
            
 
                 

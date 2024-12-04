@@ -13,7 +13,7 @@ public class Asignatura
     public ICollection<Curso> Cursos { get; set; }
     [JsonIgnore]
     public ICollection<Asistencia> Asistencias { get; set; }
-
+    [JsonIgnore]
     public ICollection<Retraso> Retrasos { get; set; }
     public ICollection<Nota> Notas { get; set; }
     [JsonIgnore]

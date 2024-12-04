@@ -1,10 +1,14 @@
 <app-table
   [data]="retrasos"
   [columns]="columns"
-  [globalFilterFields]="'fecha' , 'minutosRetraso' , 'alumnoDni', 'justificado','motivo' , 'asignaturaNombre'">
+  [globalFilterFields]="['fecha', 'minutosRetraso', 'alumnoDni', 'justificado', 'motivo', 'asignaturaNombre']"
+  (onAdd)="openNew()"
+></app-table>
 
 
 
 
-</app-table>
+
+
+
 

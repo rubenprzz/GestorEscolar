@@ -5,6 +5,7 @@ export class Retraso {
   id?: number;
   fecha?: Date;
   minutosRetraso?: number;
+  horaLlegada?: string;
   alumnoDni?: number;
   justificado?: boolean;
   motivo?: string;

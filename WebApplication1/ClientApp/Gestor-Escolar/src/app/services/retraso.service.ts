@@ -14,5 +14,8 @@ export class RetrasoService {
   getRetrasos() : Observable<any> {
     return this.http.get(this.apiUrl)
   }
+  createRetraso(retraso: any) : Observable<any> {
+    return this.http.post(this.apiUrl, retraso)
+  }
 }
 

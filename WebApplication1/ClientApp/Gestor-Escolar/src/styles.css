@@ -21,12 +21,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Estilo específico para el InputText, Dropdown y MultiSelect */
+.p-inputgroup .p-inputtext,
+.p-inputgroup .p-dropdown,
+.p-inputgroup .p-multiselect {
+  width: 75% !important; /* Aseguramos que tengan el mismo ancho */
+}
+
+/* Aseguramos que la tarjeta tenga un ancho adecuado */
 .card {
   background: var(--surface-card);
   padding: 2rem;
   border-radius: 10px;
   margin-bottom: 1rem;
+  max-width: 200px;  /* Reducido el ancho */
+  min-height: 600px; /* Mayor altura mínima */
+  margin: auto; /* Centrado automático */
 }
+
+
+/* Ajustamos el ancho de los input-text */
+.p-inputtext {
+  width: 100% !important; /* Aseguramos que los input-text llenen el espacio disponible */
+}
+
+/* Estilo específico para los dropdown */
+.p-dropdown {
+  width: 100% !important; /* Aseguramos que los dropdown también tengan el mismo ancho */
+}
+
+/* Estilo para los multiselects */
+.p-multiselect {
+  width: 100% !important; /* Aseguramos que los multiselect tengan el mismo ancho */
+}
+
 
 
 

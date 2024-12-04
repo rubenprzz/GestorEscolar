@@ -3,32 +3,48 @@ import {ProfesorService} from '../../services/profesor.service';
 import {AppTableComponent} from '../app-table/app-table.component';
 import {Asignatura} from '../../models/asignatura.model';
 import {Profesor} from '../../models/profesor.model';
+import {DialogService} from 'primeng/dynamicdialog';
+import {MessageService} from 'primeng/api';
+import {CreateProfesorComponent} from '../../create-profesor/create-profesor.component';
+import {DialogModule} from 'primeng/dialog';
+import {InputTextModule} from 'primeng/inputtext';
+import {FormsModule} from '@angular/forms';
+import {Button} from 'primeng/button';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-profesor',
   imports: [
-    AppTableComponent
+    AppTableComponent,
+    DialogModule,
+    InputTextModule,
+    FormsModule,
+    Button,
+    ConfirmDialogModule
   ],
-  templateUrl: './profesor.component.html',
   standalone: true,
-  styleUrl: './profesor.component.css'
+  templateUrl: './profesor.component.html'
 })
-export class ProfesorComponent implements OnInit{
+export class ProfesorComponent implements OnInit {
+
   profesores: any[] = [];
 
-  constructor(private readonly  profesorService:  ProfesorService) {}
+  constructor(private readonly profesorService: ProfesorService, private readonly dialogService: DialogService, private readonly messageService: MessageService) {
+  }
 
   ngOnInit() {
     this.cargarProfesores();
   }
+
   columns = [
-    { field: 'nombre', header: 'Nombre', width: '16%', type: 'text' },
-    { field: 'apellidos', header: 'Apellido', width: '16%', type: 'text' },
-    { field: 'dni', header: 'DNI', width: '16%', type: 'text' },
-    { field: 'email', header: 'Email', width: '16%', type: 'text' },
-    { field: 'telefono', header: 'Teléfono', width: '16%', type: 'text' },
-    { field: 'asignaturasNombre', header: 'Asignaturas', width: '16%', type: 'text' },
+    {field: 'nombre', header: 'Nombre', width: '16%', type: 'text'},
+    {field: 'apellidos', header: 'Apellido', width: '16%', type: 'text'},
+    {field: 'dni', header: 'DNI', width: '16%', type: 'text'},
+    {field: 'email', header: 'Email', width: '16%', type: 'text'},
+    {field: 'telefono', header: 'Teléfono', width: '16%', type: 'text'},
+    {field: 'asignaturasNombre', header: 'Asignaturas', width: '16%', type: 'text'},
   ];
+
   cargarProfesores() {
     this.profesorService.getProfesores().subscribe({
       next: (data) => {
@@ -43,5 +59,21 @@ export class ProfesorComponent implements OnInit{
     });
   }
 
+  openNew() {
+    const dialogRef = this.dialogService.open(CreateProfesorComponent, {
+      header: 'Crear Nuevo Profesor',
+      width: '70%',
+    });
 
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarProfesores();
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Alumno creado correctamente.'});
+      }
+    });
+  }
 }
+
+
+
+

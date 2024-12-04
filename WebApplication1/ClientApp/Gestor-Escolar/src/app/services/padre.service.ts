@@ -14,5 +14,8 @@ export class PadreService {
   getPadres(): Observable<any> {
     return this.http.get(this.apiUrl)
   }
+  createPadre(padre: any): Observable<any> {
+    return this.http.post(this.apiUrl, padre);
+  }
 }
 

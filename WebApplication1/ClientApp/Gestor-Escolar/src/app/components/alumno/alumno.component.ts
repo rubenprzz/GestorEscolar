@@ -23,7 +23,7 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
     ConfirmDialogModule
   ],
   standalone: true,
-  templateUrl: './alumno.component.html'
+  templateUrl: './alumno.component.html',
 })
 export class AlumnoComponent implements OnInit {
   alumnos: any[] = [];

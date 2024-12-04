@@ -219,7 +219,7 @@ namespace WebApplication1.Mappers
             return new RetrasoViewModel
             {
                 Id = retraso.Id,
-                Fecha = retraso.Fecha,
+                Fecha = retraso.Fecha.ToString("yyyy-MM-dd"),
                 Justificado = retraso.Justificado,
                 alumnoDni = retraso.Alumno?.Dni ?? "N/A",
                 alumnoNombre = retraso.Alumno?.Nombre ?? "N/A",

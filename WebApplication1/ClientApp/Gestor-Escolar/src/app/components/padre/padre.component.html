@@ -2,4 +2,5 @@
   [data]="padres"
   [columns]="columns"
   [globalFilterFields]="['nombre', 'apellidos', 'dni', 'email', 'telefono', 'alumnosDni']"
+  (onAdd)="openNew()"
 ></app-table>

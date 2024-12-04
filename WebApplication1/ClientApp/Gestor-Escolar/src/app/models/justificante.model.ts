@@ -7,6 +7,7 @@ export class Justificante {
   descripcion?: string;
   motivo?: string;
   alumnoDni?: string;
+
   asistenciaIdentificador?: string;
 
 
