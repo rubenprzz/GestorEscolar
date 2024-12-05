@@ -1,0 +1,93 @@
+<div class="card form-container">
+  <form [formGroup]="padreForm" (ngSubmit)="onSubmit()">
+    <!-- Nombre -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-user"></i>
+      </span>
+      <input
+        pInputText
+        formControlName="nombre"
+        placeholder="Introduce el nombre del padre"
+        [ngClass]="{'ng-invalid': isFieldInvalid('nombre')}">
+    </div>
+    <small *ngIf="isFieldInvalid('nombre')" class="p-error">
+      El nombre es obligatorio.
+    </small>
+
+    <!-- Apellidos -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-user-plus"></i>
+      </span>
+      <input
+        pInputText
+        formControlName="apellidos"
+        placeholder="Introduce los apellidos"
+        [ngClass]="{'ng-invalid': isFieldInvalid('apellidos')}">
+    </div>
+    <small *ngIf="isFieldInvalid('apellidos')" class="p-error">
+      Los apellidos son obligatorios.
+    </small>
+
+    <!-- DNI -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-id-card"></i>
+      </span>
+      <input
+        pInputText
+        formControlName="dni"
+        placeholder="Introduce el DNI"
+        [ngClass]="{'ng-invalid': isFieldInvalid('dni')}">
+    </div>
+    <small *ngIf="isFieldInvalid('dni')" class="p-error">
+      El DNI es obligatorio.
+    </small>
+
+    <!-- Teléfono -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-phone"></i>
+      </span>
+      <input
+        pInputText
+        formControlName="telefono"
+        placeholder="Introduce el teléfono"
+        [ngClass]="{'ng-invalid': isFieldInvalid('telefono')}">
+    </div>
+    <small *ngIf="isFieldInvalid('telefono')" class="p-error">
+      El teléfono es obligatorio.
+    </small>
+
+    <!-- Alumnos Asociados -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-users"></i>
+      </span>
+      <p-multiSelect
+        [options]="alumnos"
+        optionLabel="dni"
+        optionValue="dni"
+        formControlName="AlumnosAsociados"
+        placeholder="Selecciona alumnos asociados"
+        [showClear]="true"
+        [filter]="true">
+      </p-multiSelect>
+    </div>
+    <small *ngIf="isFieldInvalid('AlumnosAsociados')" class="p-error">
+      Debes asociar al menos un alumno.
+    </small>
+
+    <!-- Botón de Enviar -->
+    <div class="mt-4">
+      <p-button
+        label="Crear Padre"
+        [text]="true"
+        [raised]="true"
+        [disabled]="padreForm.invalid"
+        type="submit">
+      </p-button>
+    </div>
+  </form>
+</div>

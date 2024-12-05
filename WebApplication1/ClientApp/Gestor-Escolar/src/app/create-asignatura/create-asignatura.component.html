@@ -1,0 +1,100 @@
+<div class="card" style="max-width: 600px; margin: auto;">
+  <form [formGroup]="asignaturaForm" (ngSubmit)="onSubmit()">
+
+    <div class="p-inputgroup mt-3 w-5">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-book"></i>
+      </span>
+      <input
+        pInputText
+        placeholder="Nombre de la asignatura"
+        formControlName="nombre"
+        [ngClass]="{'ng-invalid': isFieldInvalid('nombre')}">
+    </div>
+
+    <!-- Profesor -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-user"></i>
+      </span>
+      <p-dropdown
+        [options]="profesores"
+        optionLabel="dni"
+        optionValue="dni"
+        formControlName="profesorDni"
+        placeholder="Selecciona un profesor">
+      </p-dropdown>
+    </div>
+
+    <!-- Curso -->
+    <div class="p-inputgroup mt-3">
+  <span class="p-inputgroup-addon">
+    <i class="pi pi-briefcase"></i>
+  </span>
+      <p-dropdown
+        [options]="cursos"
+        optionLabel="nombre"
+        optionValue="nombre"
+      formControlName="cursoNombre"
+      placeholder="Selecciona un curso"
+      [ngClass]="{'ng-invalid': isFieldInvalid('cursoNombres')}">
+      </p-dropdown>
+    </div>
+
+    <!-- Días (Multiselect) -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-calendar"></i>
+      </span>
+      <p-multiSelect
+        [options]="dias"
+        formControlName="dias"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecciona los días"
+        [showClear]="true">
+
+      ></p-multiSelect>
+    </div>
+
+    <!-- Horas de Inicio (Multiselect) -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-clock"></i>
+      </span>
+      <p-multiSelect
+        [options]="horasDisponiblesInicio"
+        formControlName="horasInicio"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecciona horas de inicio"
+        [showClear]="true">
+      </p-multiSelect>
+    </div>
+
+    <!-- Horas de Fin (Multiselect) -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-clock"></i>
+      </span>
+      <p-multiSelect
+        [options]="horasDisponiblesFin"
+        formControlName="horasFin"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecciona horas de fin"
+        [showClear]="true">
+      </p-multiSelect>
+    </div>
+
+    <div class="mt-4">
+      <p-button
+        label="Crear asignatura"
+        [text]="true"
+        [raised]="true"
+        [disabled]="asignaturaForm.invalid"
+        type="submit">
+      </p-button>
+    </div>
+  </form>
+</div>

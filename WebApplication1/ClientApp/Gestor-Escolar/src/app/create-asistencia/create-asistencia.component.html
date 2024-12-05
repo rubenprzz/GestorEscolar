@@ -1,0 +1,65 @@
+<div class="card">
+  <form [formGroup]="asistenciaForm" (ngSubmit)="onSubmit()">
+    <!-- Selección de alumno -->
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-user"></i>
+      </span>
+      <p-dropdown
+        [options]="alumnos"
+        formControlName="alumnoDni"
+        optionLabel="nombre"
+        optionValue="dni"
+        placeholder="Selecciona un alumno"
+        class="w-full">
+      </p-dropdown>
+    </div>
+    <small *ngIf="asistenciaForm.controls['alumnoDni'].invalid && asistenciaForm.controls['alumnoDni'].dirty" class="p-error">
+      Seleccione un alumno.
+    </small>
+
+    <!-- Selección de asignatura -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-book"></i>
+      </span>
+      <p-dropdown
+        [options]="asignaturas"
+        formControlName="asignaturaNombre"
+        optionLabel="nombre"
+        optionValue="nombre"
+        placeholder="Selecciona una asignatura"
+        class="w-full">
+      </p-dropdown>
+    </div>
+    <small *ngIf="asistenciaForm.controls['asignaturaNombre'].invalid && asistenciaForm.controls['asignaturaNombre'].dirty" class="p-error">
+      Seleccione una asignatura.
+    </small>
+
+    <!-- Estado de asistencia -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-check"></i>
+      </span>
+      <p-dropdown
+        [options]="estadoAsistencia"
+        formControlName="isPresent"
+        placeholder="Selecciona estado"
+        class="w-full">
+      </p-dropdown>
+    </div>
+    <small *ngIf="asistenciaForm.controls['isPresent'].invalid && asistenciaForm.controls['isPresent'].dirty" class="p-error">
+      Seleccione el estado de asistencia.
+    </small>
+
+    <!-- Botón de enviar -->
+    <div class="mt-4">
+      <p-button
+        label="Crear Asistencia"
+        [disabled]="asistenciaForm.invalid"
+        (click)="onSubmit()"
+        class="w-full">
+      </p-button>
+    </div>
+  </form>
+</div>

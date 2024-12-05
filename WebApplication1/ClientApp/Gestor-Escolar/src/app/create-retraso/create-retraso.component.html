@@ -1,0 +1,92 @@
+<div class="card form-container">
+  <form [formGroup]="retrasoForm" (ngSubmit)="onSubmit()">
+    <!-- Selección de Alumno -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-user"></i>
+      </span>
+      <p-dropdown
+        [options]="alumnos"
+        optionLabel="dni"
+        optionValue="dni"
+        formControlName="alumnoDni"
+        placeholder="Selecciona un alumno">
+      </p-dropdown>
+    </div>
+    <small *ngIf="isFieldInvalid('alumnoId')" class="p-error">
+      Es obligatorio seleccionar un alumno
+    </small>
+
+    <!-- Selección de Asignatura -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-book"></i>
+      </span>
+      <p-dropdown
+        [options]="asignaturas"
+        optionLabel="nombre"
+        optionValue="nombre"
+        formControlName="asignaturaNombre"
+        placeholder="Selecciona una asignatura">
+      </p-dropdown>
+    </div>
+    <small *ngIf="isFieldInvalid('asignaturaId')" class="p-error">
+      Es obligatorio seleccionar una asignatura
+    </small>
+
+    <!-- Fecha del Retraso -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-calendar"></i>
+      </span>
+      <p-calendar
+        formControlName="fecha"
+        placeholder="Fecha del retraso"
+        showIcon="true"
+        dateFormat="dd/mm/yy">
+      </p-calendar>
+    </div>
+    <small *ngIf="isFieldInvalid('fecha')" class="p-error">
+      La fecha es obligatoria.
+    </small>
+
+    <!-- Hora del Retraso -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-clock"></i>
+      </span>
+      <input
+        pInputText
+        placeholder="Hora del retraso"
+        formControlName="horaLlegada"
+        [ngClass]="{'ng-invalid': isFieldInvalid('horaLlegada')}">
+    </div>
+
+    <!-- Motivo -->
+    <div class="p-inputgroup mt-3">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-pencil"></i>
+      </span>
+      <textarea
+        pInputText
+        placeholder="Motivo del retraso"
+        formControlName="motivo"
+        rows="1">
+      </textarea>
+    </div>
+    <small *ngIf="isFieldInvalid('motivo')" class="p-error">
+      El motivo es obligatorio.
+    </small>
+
+    <!-- Botón de Enviar -->
+    <div class="mt-4">
+      <p-button
+        label="Crear Retraso"
+        [text]="true"
+        [raised]="true"
+        [disabled]="retrasoForm.invalid"
+        type="submit">
+      </p-button>
+    </div>
+  </form>
+</div>
