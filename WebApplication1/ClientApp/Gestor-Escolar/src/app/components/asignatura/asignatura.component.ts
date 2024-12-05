@@ -52,6 +52,18 @@ export class AsignaturaComponent implements OnInit {
       }
     });
   }
+  deleteAsignatura(id: number): void {
+    this.asigService.deleteAsignatura(id).subscribe({
+      next: () => {
+        this.asignaturas = this.asignaturas.filter((a) => a.id !== id);  // Eliminarlo de la lista local
+        this.messageService.add({ severity: 'success', summary: 'Exito', detail: 'Asignatura eliminada' });
+      },
+      error: (err) => {
+        console.error('Error al eliminar alumno', err);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la asignatura' });
+      }
+    });
+  }
 
   ngOnInit() {
     this.cargarAsignaturas();

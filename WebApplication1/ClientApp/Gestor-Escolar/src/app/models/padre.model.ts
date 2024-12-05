@@ -4,5 +4,5 @@ export class Padre {
   dni?: string;
   apellidos?: string;
   telefono?: string;
-  AlumnosAsociados?: string[];
+  alumnos?: any[];
 }

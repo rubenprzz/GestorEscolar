@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { RetrasoService } from '../services/retraso.service';
 import { AlumnoService } from '../services/alumno.service';
@@ -8,6 +8,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {CalendarModule} from 'primeng/calendar';
 import {InputTextModule} from 'primeng/inputtext';
 import {NgClass, NgIf} from '@angular/common';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-create-retraso',
@@ -27,13 +28,15 @@ export class CreateRetrasoComponent implements OnInit {
   retrasoForm: FormGroup = new FormGroup({});
   alumnos: any[] = [];
   asignaturas: any[] = [];
+  @Input() retrasoToEdit: any;
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly retrasoService: RetrasoService,
     private readonly alumnoService: AlumnoService,
     private readonly asignaturaService: AsignaturaService,
-    private readonly messageService: MessageService
+    private readonly messageService: MessageService,
+    private readonly ref: DynamicDialogRef, private readonly config: DynamicDialogConfig
   ) {
   }
 
@@ -41,6 +44,20 @@ export class CreateRetrasoComponent implements OnInit {
     this.initializeForm();
     this.loadAlumnos();
     this.loadAsignaturas();
+
+    const retrasoToEdit = this.config?.data.retrasoToEdit;
+
+    this.retrasoForm = this.fb.group({
+      id: [retrasoToEdit.id || ''],
+      fecha: [retrasoToEdit.fecha || '', Validators.required],
+      minutosRetraso: [retrasoToEdit.minutosRetraso || '', Validators.required],
+      horaLlegada: [retrasoToEdit.horaLlegada || '', Validators.required],
+      alumnoDni: [retrasoToEdit.alumnoDni || '', Validators.required],
+      justificado: [retrasoToEdit.justificado || false],
+      motivo: [retrasoToEdit.motivo || '', [Validators.required, Validators.minLength(5)]],
+      asignaturaNombre: [retrasoToEdit.asignaturaNombre || '', Validators.required]
+    });
+
   }
 
   initializeForm() {
@@ -49,6 +66,7 @@ export class CreateRetrasoComponent implements OnInit {
       asignaturaNombre: ['', Validators.required], // ID de la asignatura seleccionada
       fecha: ['', Validators.required], // Fecha del retraso
       motivo: ['', [Validators.required, Validators.minLength(5)]], // Motivo del retraso
+      justificado: ['' , Validators.required], // Si el retraso está justificado
       horaLlegada: ['', Validators.required] // Hora de llegada del alumno
     });
   }
@@ -82,36 +100,76 @@ export class CreateRetrasoComponent implements OnInit {
 
   onSubmit() {
     if (this.retrasoForm.invalid) {
+      // Si el formulario es inválido, marcar todos los campos como tocados
+      Object.keys(this.retrasoForm.controls).forEach(field => {
+        const control = this.retrasoForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
       return;
     }
 
     const retrasoData = this.retrasoForm.getRawValue();
 
-    // Formatear la hora antes de enviarla
-    if (retrasoData.hora) {
-      // Aquí le asignamos un valor por defecto si la hora es '00:00:00' o alguna otra lógica que necesites
-      const [hours, minutes] = retrasoData.hora.split(':');
-      retrasoData.horaLlegada = `${hours}:${minutes}`;  // Formato "HH:mm"
+    // Formatear la hora de llegada si es necesario
+    if (retrasoData.horaLlegada) {
+      const [hours, minutes] = retrasoData.horaLlegada.split(':');
+      retrasoData.horaLlegada = `${hours}:${minutes}`; // Formato "HH:mm"
     }
 
+    // Buscar el alumno y asignatura seleccionados
     const alumnoSeleccionado = this.alumnos.find(alumno => alumno.dni === retrasoData.alumnoDni);
-    const asignaturaSeleccionada = this.asignaturas.find(asignatura => asignatura.nombre === retrasoData.asignaturaId);
+    const asignaturaSeleccionada = this.asignaturas.find(asignatura => asignatura.nombre === retrasoData.asignaturaNombre);
 
     if (alumnoSeleccionado) {
-      retrasoData.alumnoId = alumnoSeleccionado.id;
+      retrasoData.alumnoId = alumnoSeleccionado.id; // Asignar el ID del alumno
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se ha encontrado el alumno seleccionado'
+      });
+      return;
+    }
 
-      if (asignaturaSeleccionada) {
-        retrasoData.asignaturaNombre = asignaturaSeleccionada.nombre;
-      }
+    if (asignaturaSeleccionada) {
+      retrasoData.asignaturaId = asignaturaSeleccionada.id; // Asignar el ID de la asignatura
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se ha encontrado la asignatura seleccionada'
+      });
+      return;
+    }
 
-      // Enviar los datos del formulario
-      this.retrasoService.createRetraso(retrasoData).subscribe({
+    // Si hay un ID en el retrasoToEdit, significa que estamos editando un retraso existente
+    if (this.retrasoToEdit && this.retrasoToEdit.id) {
+      // Editar un retraso existente
+      this.retrasoService.updateRetraso(this.retrasoToEdit.id, retrasoData).subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',
-            summary: 'Retraso creado',
-            detail: 'El retraso se ha creado correctamente'
+            summary: 'Retraso actualizado',
+            detail: 'El retraso se ha actualizado correctamente'
           });
+          this.ref.close(true); // Cerrar el diálogo
+          this.retrasoForm.reset(); // Reiniciar el formulario
+        },
+        error: (err) => {
+          console.error('Error al actualizar el retraso:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error al actualizar el retraso',
+            detail: 'Ha ocurrido un error al actualizar el retraso'
+          });
+        }
+      });
+    } else {
+      // Crear un nuevo retraso
+      this.retrasoService.createRetraso(retrasoData).subscribe({
+        next: () => {
+
+          this.ref.close(true); // Cerrar el diálogo
           this.retrasoForm.reset(); // Reiniciar el formulario
         },
         error: (err) => {
@@ -125,4 +183,5 @@ export class CreateRetrasoComponent implements OnInit {
       });
     }
   }
+
 }

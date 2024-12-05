@@ -21,4 +21,13 @@ export class ProfesorService {
   createProfesor(profesor: any): Observable<any> {
     return this.http.post(this.apiUrl, profesor);
   }
+  updateProfesor(id:number, profesor: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, profesor);
+  }
+  deleteProfesor(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+  getPronfesorById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
 }

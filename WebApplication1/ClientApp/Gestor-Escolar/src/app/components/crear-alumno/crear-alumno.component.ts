@@ -8,6 +8,9 @@ import {DropdownModule} from 'primeng/dropdown';
 import { AlumnoService } from '../../services/alumno.service';
 import { CursoService } from '../../services/curso.service';
 import {FileUploadModule} from 'primeng/fileupload';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
+import {MultiSelectModule} from 'primeng/multiselect';
+import {PadreService} from '../../services/padre.service';
 
 @Component({
   selector: 'app-crear-alumno',
@@ -20,47 +23,58 @@ import {FileUploadModule} from 'primeng/fileupload';
     CalendarModule,
     DropdownModule,
     FormsModule,
-    FileUploadModule
+    FileUploadModule,
+    MultiSelectModule
   ],
   standalone: true
 })
 export class CrearAlumnoComponent implements OnInit {
   alumnoForm: FormGroup = new FormGroup({});
   cursos: any[] = [];
+  padres: any[] = [];
   @Input() alumnoToEdit: any;
+  public reff?: DynamicDialogRef
+  public configg?: DynamicDialogConfig
 
-  constructor(private readonly fb: FormBuilder, private readonly alumnoService: AlumnoService, private readonly messageService: MessageService, private readonly cursoService: CursoService) {
-  }
+  constructor(private readonly fb: FormBuilder, private readonly alumnoService: AlumnoService, private readonly messageService: MessageService, private readonly padreService: PadreService , private readonly cursoService: CursoService, private readonly ref: DynamicDialogRef, private readonly config: DynamicDialogConfig) { }
+
 
   ngOnInit(): void {
     this.initializeForm();
-    this.loadCursos();  // Cargar los cursos cuando se inicializa el componente
+    console.log('Alumno a editar:', this.alumnoToEdit);
+    this.loadCursos();
+    this.loadPadres();
+    // Cargar los cursos cuando se inicializa el componente
 
-    // Si existe un alumno a editar, cargar sus datos en el formulario
-    if (this.alumnoToEdit) {
-      this.alumnoForm.patchValue({
-        nombre: this.alumnoToEdit.nombre,
-        apellidos: this.alumnoToEdit.apellidos,
-        dni: this.alumnoToEdit.dni,
-        fechaNacimiento: new Date(this.alumnoToEdit.fechaNacimiento),
-        email: this.alumnoToEdit.email,
-        telefono: this.alumnoToEdit.telefono,
-        foto: this.alumnoToEdit.foto, // Si ya existe una foto, cargarla
-        cursoNombre: this.alumnoToEdit.cursoNombre,
-        padresDnis: this.alumnoToEdit.padresDnis?.join(', '), // Si es un array, unir los DNIs
+    const alumnoToEdit = this.config?.data.alumnoToEdit;
+
+    this.alumnoForm = this.fb.group({
+      id: [alumnoToEdit.id || ''],
+      nombre: [alumnoToEdit.nombre || '', Validators.required],
+      apellidos: [alumnoToEdit.apellidos || '', Validators.required],
+      dni: [alumnoToEdit.dni || '', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]], // Validación del DNI
+      fechaNacimiento: [alumnoToEdit.fechaNacimiento || '', Validators.required],
+      email: [alumnoToEdit.email || '', [Validators.required, Validators.email]],
+      telefono: [alumnoToEdit.telefono || ''],
+      urlFoto: [alumnoToEdit.urlFoto || ''],
+      cursoNombre: [alumnoToEdit.cursoNombre || '', Validators.required],
+      padresDnis: [alumnoToEdit.padresDnis],
+
       });
-    }
+
+
   }
 
   initializeForm() {
     this.alumnoForm = this.fb.group({
+      id: [''],
       nombre: ['', Validators.required],
       apellidos: ['', Validators.required],
       dni: ['', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]], // Validación del DNI
       fechaNacimiento: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       telefono: [''],
-      foto: [''],
+      urlFoto: [''],
       cursoNombre: ['', Validators.required],
       padresDnis: [''],
     });
@@ -73,6 +87,16 @@ export class CrearAlumnoComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar los cursos:', error);
+      }
+    });
+  }
+  loadPadres() {
+    this.padreService.getPadres().subscribe({
+      next: (data) => {
+        this.padres = data;  // Asigna los padres al arreglo
+      },
+      error: (error) => {
+        console.error('Error al cargar los padres:', error);
       }
     });
   }
@@ -90,42 +114,38 @@ export class CrearAlumnoComponent implements OnInit {
     }
 
     const formData = new FormData();
-
-    formData.append('nombre', this.alumnoForm.get('nombre')?.value);
-    formData.append('apellidos', this.alumnoForm.get('apellidos')?.value);
-    formData.append('dni', this.alumnoForm.get('dni')?.value);
-    const fechaNacimiento = this.alumnoForm.get('fechaNacimiento')?.value;
-    if (fechaNacimiento) {
-      formData.append('fechaNacimiento', fechaNacimiento.toISOString());
+    const alumnoData = this.alumnoForm.value;
+    if (alumnoData.id) {
+      formData.append('id', alumnoData.id.toString());
     }
-    formData.append('email', this.alumnoForm.get('email')?.value);
-    formData.append('telefono', this.alumnoForm.get('telefono')?.value);
-    const cursoNombre = this.alumnoForm.get('cursoNombre')?.value;
-    formData.append('cursoNombre', typeof cursoNombre === 'string' ? cursoNombre : cursoNombre.nombre);
+    formData.append('nombre', alumnoData.nombre);
+    formData.append('apellidos', alumnoData.apellidos);
+    formData.append('dni', alumnoData.dni);
 
-    // Si hay foto, agregarla al FormData
-    const foto = this.alumnoForm.get('foto')?.value;
-    if (foto) {
-      formData.append('foto', foto, foto.name);
+    if (alumnoData.fechaNacimiento) {
+      formData.append('fechaNacimiento', alumnoData.fechaNacimiento.toISOString());
     }
 
-    const padresDnis = this.alumnoForm.get('padresDnis')?.value;
-    if (padresDnis) {
-      padresDnis.split(',').forEach((dni: string) => {
-        formData.append('padresDnis', dni.trim());
-      });
-    }
+    formData.append('email', alumnoData.email);
+    formData.append('telefono', alumnoData.telefono || '');
+    formData.append('cursoNombre', alumnoData.cursoNombre);
+    formData.append('padresDnis', alumnoData.padresDnis);
+    formData.append('urlFoto', alumnoData.urlFoto);
 
-    if (this.alumnoToEdit) {
+
+
+
+    if (this.alumnoForm.get('id')) {
       // Actualizar el alumno
-      this.alumnoService.updateAlumno(this.alumnoToEdit.id, formData).subscribe({
+      const alumnoId = this.alumnoForm.get('id')?.value; // ID del alumno almacenado en el formulario
+      this.alumnoService.updateAlumno(alumnoId, formData).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Alumno actualizado' });
         },
         error: (err) => {
           console.error('Error al actualizar el alumno:', err);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el alumno' });
-        }
+        },
       });
     } else {
       // Crear nuevo alumno
@@ -137,7 +157,7 @@ export class CrearAlumnoComponent implements OnInit {
         error: (err) => {
           console.error('Error al crear el alumno:', err);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el alumno' });
-        }
+        },
       });
     }
   }
@@ -152,12 +172,14 @@ export class CrearAlumnoComponent implements OnInit {
     }*/
 
   onFileChange(event: any) {
-    const file = event.target.files[0];
+    const file = event.files[0];
     if (file) {
       this.alumnoForm.patchValue({
-        foto: file
+        urlFoto: file
       });
+      console.log("Archivo seleccionado: ", file.name); // Verificar si el archivo se ha asignado correctamente
     }
   }
+
 }
 

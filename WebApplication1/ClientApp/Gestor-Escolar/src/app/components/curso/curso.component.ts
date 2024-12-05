@@ -24,6 +24,7 @@ export class CursoComponent  implements OnInit{
     { field: 'fechaInicio', header: 'Fecha Inicio', width: '16%', type: 'text' },
     { field: 'fechaFin', header: 'Fecha Fin', width: '16%', type: 'text' },
 
+
   ];
 
   constructor(private readonly curs: CursoService, private readonly dialogService: DialogService, private readonly messageService: MessageService) {}
@@ -42,9 +43,36 @@ export class CursoComponent  implements OnInit{
       }
     });
   }
-
+  deleteCurso(id: number): void {
+    this.curs.deleteCurso(id).subscribe({
+      next: () => {
+        this.cursos = this.cursos.filter((a) => a.id !== id);  // Eliminarlo de la lista local
+        this.messageService.add({ severity: 'success', summary: 'Exito', detail: 'Curso eliminado' });
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el curso' });
+      }
+    });
+  }
   ngOnInit() {
     this.cargarCursos();
+  }
+
+  editCurso(curso: any) {
+    const dialogRef = this.dialogService.open(CreateCursoComponent, {
+      header: 'Editar Curso',
+      width: '70%',
+      data: {
+        cursoToEdit: curso
+      }
+    });
+
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarCursos();
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Curso editado correctamente.'});
+      }
+    });
   }
   cargarCursos() {
     this.curs.getCursos().subscribe({

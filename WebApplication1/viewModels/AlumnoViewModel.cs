@@ -14,7 +14,7 @@ namespace WebApplication1.ViewModels
         public List<string> Padres { get; set; } = new List<string>();  
         public string Curso { get; set; }  
         public List<string> Justificantes { get; set; }
-        public List<int> Notas { get; set; }    // Notas del alumno
+        public List<int>? Notas { get; set; }    // Notas del alumno
         public int CantidadRetrasos { get; set; } // Número de retrasos
         private string _urlFotoL; // Campo privado para almacenar la URL relativa
 

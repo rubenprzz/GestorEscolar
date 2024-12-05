@@ -17,5 +17,12 @@ export class RetrasoService {
   createRetraso(retraso: any) : Observable<any> {
     return this.http.post(this.apiUrl, retraso)
   }
+  updateRetraso(id:number,retraso: any) : Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, retraso)
+  }
+
+  deleteRetraso(id: number) : Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`)
+  }
 }
 

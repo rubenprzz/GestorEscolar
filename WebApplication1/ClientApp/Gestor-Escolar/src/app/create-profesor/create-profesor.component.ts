@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ProfesorService } from '../services/profesor.service';
 import { AsignaturaService } from '../services/asignatura.service';
@@ -7,6 +7,7 @@ import {MultiSelectModule} from 'primeng/multiselect';
 import {NgClass, NgIf} from '@angular/common';
 import {Button} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-create-profesor',
@@ -25,17 +26,31 @@ import {InputTextModule} from 'primeng/inputtext';
 export class CreateProfesorComponent implements OnInit {
   profesorForm: FormGroup = new FormGroup({});
   asignaturas: any[] = []; // Lista de asignaturas
+  @Input() profesorToEdit: any;
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly profesorService: ProfesorService,
     private readonly asignaturaService: AsignaturaService,
-    private readonly messageService: MessageService
+    private readonly messageService: MessageService,
+    private readonly ref: DynamicDialogRef, private readonly config: DynamicDialogConfig
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.loadAsignaturas();
+
+    const profesorToEdit = this.config?.data.profesorToEdit;
+
+    this.profesorForm = this.fb.group({
+      id: [profesorToEdit.id || ''],
+      nombre: [profesorToEdit.nombre || '', Validators.required],
+      apellidos: [profesorToEdit.apellidos || '', Validators.required],
+      dni: [profesorToEdit.dni || '', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]] , // Validación del DNI
+      email: [profesorToEdit.email || '', [Validators.required, Validators.email]],
+      telefono: [profesorToEdit.telefono || ''],
+      asignaturasId: [profesorToEdit.asignaturas?.map((asignatura: any) => asignatura.id) || [], Validators.required], // Campo para multiselect
+    });
   }
 
   initializeForm() {
@@ -72,23 +87,48 @@ export class CreateProfesorComponent implements OnInit {
 
     const profesorData = this.profesorForm.getRawValue();
 
-    this.profesorService.createProfesor(profesorData).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Profesor creado',
-          detail: 'El profesor ha sido creado exitosamente',
-        });
-        this.profesorForm.reset(); // Reiniciar el formulario
-      },
-      error: (err: any) => {
-        console.error('Error al crear profesor:', err);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al crear profesor',
-          detail: 'Hubo un problema al crear el profesor',
-        });
-      },
-    });
+    if (profesorData.id) {
+      // Actualizar profesor
+      this.profesorService.updateProfesor(profesorData.id, profesorData).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Profesor actualizado',
+            detail: 'El profesor ha sido actualizado exitosamente',
+          });
+          this.profesorForm.reset(); // Reiniciar el formulario
+          this.ref.close(); // Cerrar el diálogo
+        },
+        error: (err: any) => {
+          console.error('Error al actualizar profesor:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error al actualizar profesor',
+            detail: 'Hubo un problema al actualizar el profesor',
+          });
+        },
+      });
+    } else {
+      // Crear nuevo profesor
+      this.profesorService.createProfesor(profesorData).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Profesor creado',
+            detail: 'El profesor ha sido creado exitosamente',
+          });
+          this.profesorForm.reset(); // Reiniciar el formulario
+          this.ref.close(); // Cerrar el diálogo
+        },
+        error: (err: any) => {
+          console.error('Error al crear profesor:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error al crear profesor',
+            detail: 'Hubo un problema al crear el profesor',
+          });
+        },
+      });
+    }
   }
 }

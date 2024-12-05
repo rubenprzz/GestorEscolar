@@ -4,4 +4,5 @@
   [columns]="columns"
   [globalFilterFields]="['nombre', 'curso', 'profesor']"
   (onAdd)="openNew()"
+  (onDelete)="deleteAsignatura($event.id)"
 ></app-table>

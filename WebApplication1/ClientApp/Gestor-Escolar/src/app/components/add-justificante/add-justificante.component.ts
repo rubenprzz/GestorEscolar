@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { NgClass, NgIf } from '@angular/common';
@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AlumnoService } from '../../services/alumno.service';
 import { AsistenciaService } from '../../services/asistencia.service';
 import {JustificanteService} from '../../services/justificante.service';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-crear-justificante',
@@ -27,13 +28,14 @@ export class AddJustificanteComponent implements OnInit {
   justificanteForm: FormGroup = new FormGroup({});
   alumnos: any[] = [];
   asistencias: any[] = [];
-
+  @Input() justificanteToEdit: any;
   constructor(
     private readonly fb: FormBuilder,
     private readonly alumnoService: AlumnoService,
     private readonly asistenciaService: AsistenciaService,
     private readonly messageService: MessageService,
-    private readonly justi: JustificanteService
+    private readonly justi: JustificanteService,
+    private readonly ref: DynamicDialogRef, private readonly config: DynamicDialogConfig
   ) {
   }
 
@@ -41,6 +43,18 @@ export class AddJustificanteComponent implements OnInit {
     this.initializeForm();
     this.loadAlumnos();
     this.loadAsistencias();
+
+    const justificanteToEdit = this.config?.data.justificanteToEdit;
+
+    this.justificanteForm = this.fb.group({
+      id: [justificanteToEdit.id || ''],
+      alias: [{value: justificanteToEdit.alias, disabled: true}],
+      fechaJustificacion: [justificanteToEdit.fechaJustificacion || '', Validators.required],
+      descripcion: [justificanteToEdit.descripcion || '', Validators.required],
+      alumnoDni: [justificanteToEdit.alumnoDni || '', Validators.required],
+      motivo: [justificanteToEdit.motivo || '', Validators.required],
+      asistenciaIdentificador: [justificanteToEdit.asistenciaIdentificador || '', Validators.required],
+    });
   }
 
   initializeForm() {
@@ -95,24 +109,55 @@ export class AddJustificanteComponent implements OnInit {
 
   onSubmit() {
     if (this.justificanteForm.invalid) {
+      // Si el formulario es inválido, marcar todos los campos como tocados para mostrar los errores
+      Object.keys(this.justificanteForm.controls).forEach(field => {
+        const control = this.justificanteForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
       return;
     }
 
     const justificanteData = this.justificanteForm.getRawValue();
 
+    // Formatear la fecha si es necesaria
     if (justificanteData.fechaJustificacion) {
       justificanteData.fechaJustificacion = justificanteData.fechaJustificacion.toISOString().split('T')[0]; // Formato yyyy-MM-dd
     }
 
-    this.justi.createJustificante(justificanteData).subscribe({
-      next: () => {
-        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Justificante creado'});
-        this.justificanteForm.reset(); // Reiniciar el formulario
-      },
-      error: (err: any) => {
-        console.error('Error al crear el justificante:', err);
-        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear el justificante'});
-      }
-    });
+    if (justificanteData.id) {
+      // Si el justificante tiene un ID, se realiza una actualización
+      this.justi.updateJustificante(justificanteData.id, justificanteData).subscribe({
+        next: () => {
+
+          // Opcional: cerrar el diálogo si es necesario
+          this.ref.close(true);
+
+          // Resetear el formulario
+          this.justificanteForm.reset();
+        },
+        error: (error) => {
+          console.error('Error al actualizar el justificante:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el justificante. Intente nuevamente.' });
+        }
+      });
+    } else {
+      // Si no existe un ID, se crea un nuevo justificante
+      this.justi.createJustificante(justificanteData).subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Justificante creado correctamente.' });
+
+          // Opcional: cerrar el diálogo si es necesario
+          this.ref.close(true);
+
+          // Resetear el formulario
+          this.justificanteForm.reset();
+        },
+        error: (error) => {
+          console.error('Error al crear el justificante:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el justificante. Intente nuevamente.' });
+        }
+      });
+    }
   }
+
 }

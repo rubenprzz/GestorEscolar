@@ -189,21 +189,90 @@ namespace WebApplication1.Services
 
 
 
-        public async Task<Curso> ActualizarCurso(Curso curso)
+      public async Task<CursoViewModel> ActualizarCurso(int id, createCursoDto dto)
+{
+    // Buscar el curso en la base de datos
+    var cursoExistente = await _context.Cursos
+        .Include(c => c.Alumnos)
+        .Include(c => c.Asignaturas)
+        .FirstOrDefaultAsync(c => c.Id == id);
+    
+    if (cursoExistente == null)
+    {
+        // Si no se encuentra el curso, retornar null o lanzar una excepción
+        return null;
+    }
+
+    // Actualizar los campos del curso con los datos del DTO
+    cursoExistente.Nombre = dto.Nombre ?? cursoExistente.Nombre;
+    cursoExistente.FechaInicio = dto.FechaInicio ?? cursoExistente.FechaInicio;
+    cursoExistente.FechaFin = dto.FechaFin ?? cursoExistente.FechaFin;
+
+    // Actualizar la lista de alumnos
+    if (dto.alumnos != null && dto.alumnos.Any())
+    {
+        var alumnosSeleccionados = await _context.Alumnos
+            .Where(a => dto.alumnos.Contains(a.Dni))
+            .ToListAsync();
+
+        // Limpiar los alumnos anteriores y agregar los nuevos
+        cursoExistente.Alumnos.Clear();
+        foreach (var alumno in alumnosSeleccionados)
         {
-            var cursoExistente = await _context.Cursos.FindAsync(curso.Id);
-            if (cursoExistente == null)
-            {
-                return null;
-            }
-
-            cursoExistente.Nombre = curso.Nombre;
-
-            _context.Cursos.Update(cursoExistente);
-            await _context.SaveChangesAsync();
-
-            return cursoExistente;
+            cursoExistente.Alumnos.Add(alumno);
         }
+    }
+
+    // Actualizar la lista de asignaturas
+    if (dto.asignaturas != null && dto.asignaturas.Any())
+    {
+        var asignaturasSeleccionadas = await _context.Asignaturas
+            .Where(a => dto.asignaturas.Contains(a.Nombre))
+            .ToListAsync();
+
+        // Limpiar las asignaturas anteriores y agregar las nuevas
+        cursoExistente.Asignaturas.Clear();
+        foreach (var asignatura in asignaturasSeleccionadas)
+        {
+            cursoExistente.Asignaturas.Add(asignatura);
+        }
+    }
+
+    // Guardar los cambios en la base de datos
+    _context.Cursos.Update(cursoExistente);
+    await _context.SaveChangesAsync();
+
+    // Devolver el curso actualizado en el formato adecuado (CursoViewModel)
+    var cursoViewModel = new CursoViewModel
+    {
+        Id = cursoExistente.Id,
+        Nombre = cursoExistente.Nombre,
+        FechaInicio = cursoExistente.FechaInicio,
+        FechaFin = cursoExistente.FechaFin,
+        Alumnos = cursoExistente.Alumnos.Select(a => new AlumnoViewModelSinCamposNoNecesarios
+        {
+            Id = a.Id,
+            Nombre = a.Nombre,
+            Apellidos = a.Apellidos,
+            Dni = a.Dni,
+            FechaNacimiento = a.FechaNacimiento,
+            Email = a.Email,
+            Padres = a.Padres.Select(p => p.Dni).ToList(),
+            Telefono = a.Telefono,
+        }).ToList(),
+        Asignaturas = cursoExistente.Asignaturas.Select(a => new AsignaturaViewModel
+        {
+            Id = a.Id,
+            Nombre = a.Nombre,
+            HorasInicio = a.HorasDeClase.Select(h => h.HoraInicio.ToString(@"hh\:mm")).ToList(),
+            HorasFin = a.HorasDeClase.Select(h => h.HoraFin.ToString(@"hh\:mm")).ToList(),
+            Dias = a.HorasDeClase.Select(h => h.Dia.ToString()).ToList()
+        }).ToList(),
+    };
+
+    return cursoViewModel;
+}
+
 
         public async Task<bool> EliminarCurso(int id)
         {

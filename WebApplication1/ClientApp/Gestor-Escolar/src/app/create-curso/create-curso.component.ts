@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { JustificanteService } from '../services/justificante.service';
 import { AlumnoService } from '../services/alumno.service';
 import { MessageService } from 'primeng/api';
 import { CursoService } from '../services/curso.service';
@@ -9,6 +8,7 @@ import {MultiSelectModule} from 'primeng/multiselect';
 import {CalendarModule} from 'primeng/calendar';
 import {InputTextModule} from 'primeng/inputtext';
 import {NgIf} from '@angular/common';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-create-curso',
@@ -27,19 +27,32 @@ export class CreateCursoComponent implements OnInit {
   cursoForm: FormGroup = new FormGroup({});
   alumnos: any[] = [];
   asignaturas: any[] = [];
+  @Input() cursoToEdit: any;
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly cursoService: CursoService,
     private readonly messageService: MessageService,
     private readonly alumnoService: AlumnoService,
-    private readonly asignaturaService: AsignaturaService
+    private readonly asignaturaService: AsignaturaService,
+    private readonly ref: DynamicDialogRef, private readonly config: DynamicDialogConfig
   ) {}
 
   ngOnInit() {
     this.initializeForm();
     this.loadAlumnos();
     this.loadAsignaturas();
+
+    const cursoToEdit = this.config?.data.cursoToEdit;
+
+    this.cursoForm = this.fb.group({
+      id: [cursoToEdit.id || ''],
+      nombre: [cursoToEdit.nombre || '', Validators.required],
+      fechaInicio: [cursoToEdit.fechaInicio || '', Validators.required],
+      fechaFin: [cursoToEdit.fechaFin || '', Validators.required],
+      alumnos: [cursoToEdit.alumnos?.map((alumno: any) => alumno.dni) || [], Validators.required], // Campo para mult
+      asignaturas: [cursoToEdit.asignaturas?.map((asignatura: any) => asignatura.nombre) || [], Validators.required] // Campo para mult
+    });
   }
 
 
@@ -82,11 +95,17 @@ export class CreateCursoComponent implements OnInit {
 
   onSubmit() {
     if (this.cursoForm.invalid) {
+      // Si el formulario es inválido, marcar todos los campos como tocados para mostrar los errores
+      Object.keys(this.cursoForm.controls).forEach(field => {
+        const control = this.cursoForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
       return;
     }
 
     const cursoData = this.cursoForm.getRawValue();
 
+    // Formatear las fechas si es necesario
     if (cursoData.fechaInicio) {
       cursoData.fechaInicio = cursoData.fechaInicio.toISOString().split('T')[0]; // Formato yyyy-MM-dd
     }
@@ -98,30 +117,55 @@ export class CreateCursoComponent implements OnInit {
     if (!cursoData.alumnos) cursoData.alumnos = [];
     if (!cursoData.asignaturas) cursoData.asignaturas = [];
 
-
+    // Extraer solo los identificadores de los alumnos seleccionados
     cursoData.alumnos = cursoData.alumnos.map((alumno: any) => alumno.dni);
 
-    // Extraer solo los identificadores de las asignaturas seleccionadas (si aplica)
+    // Extraer solo los nombres de las asignaturas seleccionadas
     cursoData.asignaturas = cursoData.asignaturas.map((asignatura: any) => asignatura.nombre);
 
-    // Enviar el formulario al servicio para crear el curso
-    this.cursoService.createCurso(cursoData).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Curso creado',
-          detail: 'El curso se ha creado correctamente'
-        });
-        this.cursoForm.reset(); // Reiniciar el formulario
-      },
-      error: (error) => {
-        console.error('Error al crear el curso:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al crear el curso',
-          detail: 'Ha ocurrido un error al crear el curso'
-        });
-      }
-    });
+    if (cursoData.id) {
+      // Si existe el ID, se realiza una actualización
+      this.cursoService.updateCurso(cursoData.id, cursoData).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Curso actualizado correctamente.'
+          });
+          this.ref.close(true); // Opcional: cerrar el diálogo si es necesario
+          this.cursoForm.reset(); // Reiniciar el formulario
+        },
+        error: (error) => {
+          console.error('Error al actualizar el curso:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error al actualizar el curso',
+            detail: 'No se pudo actualizar el curso.'
+          });
+        }
+      });
+    } else {
+      // Si no existe el ID, se crea un nuevo curso
+      this.cursoService.createCurso(cursoData).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Curso creado correctamente.'
+          });
+          this.cursoForm.reset(); // Reiniciar el formulario
+          this.ref.close(true); // Opcional: cerrar el diálogo si es necesario
+        },
+        error: (error) => {
+          console.error('Error al crear el curso:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error al crear el curso',
+            detail: 'No se pudo crear el curso.'
+          });
+        }
+      });
+    }
   }
+
 }

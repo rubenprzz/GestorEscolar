@@ -17,6 +17,21 @@
       Es obligatorio seleccionar un alumno
     </small>
 
+    <div class="p-inputgroup mt-3">
+  <span class="p-inputgroup-addon">
+    <i class="pi pi-check-circle"></i>
+  </span>
+      <p-dropdown
+        [options]="[ { label: 'Sí', value: true }, { label: 'No', value: false } ]"
+        formControlName="justificado"
+        placeholder="Selecciona si está justificado o no">
+      </p-dropdown>
+    </div>
+    <small *ngIf="isFieldInvalid('justificado')" class="p-error">
+      Es obligatorio seleccionar si está justificado o no.
+    </small>
+
+
     <!-- Selección de Asignatura -->
     <div class="p-inputgroup mt-3">
       <span class="p-inputgroup-addon">

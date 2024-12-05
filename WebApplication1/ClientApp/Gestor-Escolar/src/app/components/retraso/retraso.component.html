@@ -3,6 +3,8 @@
   [columns]="columns"
   [globalFilterFields]="['fecha', 'minutosRetraso', 'alumnoDni', 'justificado', 'motivo', 'asignaturaNombre']"
   (onAdd)="openNew()"
+  (onDelete)="deleteRetraso($event.id)"
+  (onEdit)="editRetraso($event)"
 ></app-table>
 
 

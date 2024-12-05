@@ -101,7 +101,7 @@ namespace WebApplication1.Controllers
 
             // Manejar la imagen
             string imageUrl = null;
-            if (dto.foto != null && dto.foto.Length > 0)
+            if (dto.urlFoto != null && dto.urlFoto.Length > 0)
             {
                 var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
                 if (!Directory.Exists(uploadsFolder))
@@ -109,12 +109,12 @@ namespace WebApplication1.Controllers
                     Directory.CreateDirectory(uploadsFolder);
                 }
 
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.foto.FileName);
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.urlFoto.FileName);
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await dto.foto.CopyToAsync(stream);
+                    await dto.urlFoto.CopyToAsync(stream);
                 }
 
                 imageUrl = $"/uploads/{fileName}";
@@ -128,14 +128,36 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Alumno>> UpdateAlumno(int id, [FromBody] Alumno alumno)
+        public async Task<ActionResult<Alumno>> UpdateAlumno(int id, [FromForm] CrearAlumnoDto dto)
         {
-            if (alumno == null || id != alumno.Id)
+            if (dto == null || id != dto.id)
             {
                 return BadRequest("Los datos del alumno son incorrectos.");
             }
 
-            var alumnoActualizado = await _alumnoService.ActualizarAlumno(alumno);
+            // Manejar la imagen si se proporciona
+            string imageUrl = null;
+            if (dto.urlFoto != null && dto.urlFoto.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.urlFoto.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await dto.urlFoto.CopyToAsync(stream);
+                }
+
+                imageUrl = $"/uploads/{fileName}";
+            }
+
+            // Actualizar el alumno con la nueva imagen, si corresponde
+            var alumnoActualizado = await _alumnoService.ActualizarAlumno(dto, imageUrl);
             if (alumnoActualizado == null)
             {
                 return NotFound();

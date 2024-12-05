@@ -69,13 +69,13 @@
         [options]="alumnos"
         optionLabel="dni"
         optionValue="dni"
-        formControlName="AlumnosAsociados"
+        formControlName="alumnos"
         placeholder="Selecciona alumnos asociados"
         [showClear]="true"
         [filter]="true">
       </p-multiSelect>
     </div>
-    <small *ngIf="isFieldInvalid('AlumnosAsociados')" class="p-error">
+    <small *ngIf="isFieldInvalid('alumnos')" class="p-error">
       Debes asociar al menos un alumno.
     </small>
 

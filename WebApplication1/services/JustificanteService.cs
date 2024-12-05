@@ -48,6 +48,7 @@ namespace WebApplication1.Services
 
             return justificanteViewModel;
         }
+
         public async Task<List<JustificanteViewModel>> obtenerJustificantesPorAlumnoId(int id)
         {
             var justificantes = await _context.Justificantes
@@ -78,6 +79,7 @@ namespace WebApplication1.Services
 
             return justificantesViewModel;
         }
+
         public async Task<Justificante> CreateJustificante(createJustificanteDto dto)
         {
             // Validar la asistencia por identificador
@@ -97,13 +99,13 @@ namespace WebApplication1.Services
                 throw new Exception($"Alumno with DNI {dto.AlumnoDni} not found.");
             }
 
-            var fechaF= dto.FechaJustificacion;
-
-            string alias = $"{dto.AsistenciaIdentificador}-{fechaF}";
+            // Generar alias en el mismo formato que el front
+            string alias = $"{alumno.Dni.Substring(0, 4)}{dto.AsistenciaIdentificador}{alumno.Dni[^1]}";
 
             // Crear el justificante
             var justificante = new Justificante
             {
+                Id = dto.id,
                 FechaJustificacion = dto.FechaJustificacion,
                 Descripcion = dto.Descripcion,
                 Motivo = dto.Motivo,
@@ -118,6 +120,7 @@ namespace WebApplication1.Services
 
             return justificante;
         }
+
 
         public async Task<List<JustificanteViewModel>> ObtenerJustificantesPorFecha(DateOnly fecha)
         {
@@ -149,7 +152,7 @@ namespace WebApplication1.Services
 
             return justificantesViewModel;
         }
-        
+
         public async Task<JustificanteViewModel?> ObtenerJustificanteByAlias(string alias)
         {
             var justificante = await _context.Justificantes
@@ -208,11 +211,60 @@ namespace WebApplication1.Services
 
                     // Información de la asignatura
                     AsignaturaNombre = j.Asistencia.Asignatura.Nombre,
-                    
+
                 })
                 .ToList();
 
             return justificantesViewModel;
+        }
+
+        public async Task<bool> deleteJustificante(int id)
+        {
+            var justificante = await _context.Justificantes.FindAsync(id);
+            if (justificante != null)
+            {
+                _context.Justificantes.Remove(justificante);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<Justificante> EditJustificante(int id, createJustificanteDto dto)
+        {
+            var justificante = await _context.Justificantes.FindAsync(id);
+
+            if (justificante == null)
+            {
+                return null;
+            }
+
+            var alumno = await _context.Alumnos.FirstOrDefaultAsync(a => a.Dni == dto.AlumnoDni);
+            if (alumno == null)
+            {
+                return null;
+            }
+
+            var asistencia =
+                await _context.Asistencias.FirstOrDefaultAsync(a => a.Identificador == dto.AsistenciaIdentificador);
+            if (asistencia == null)
+            {
+                return null;
+            }
+
+            justificante.FechaJustificacion = dto.FechaJustificacion;
+            justificante.Descripcion = dto.Descripcion;
+            justificante.Motivo = dto.Motivo;
+            justificante.Alias = dto.Alias;
+            justificante.AlumnoId = alumno.Id;
+            justificante.AsistenciaId = asistencia.Id;
+
+            _context.Justificantes.Update(justificante);
+
+            await _context.SaveChangesAsync();
+
+            return justificante;
         }
     }
 }

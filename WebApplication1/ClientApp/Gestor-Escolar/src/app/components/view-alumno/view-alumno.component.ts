@@ -15,20 +15,20 @@ import {CardModule} from 'primeng/card';
     CardModule
   ]
 })
-export class ViewAlumnoComponent implements OnInit {
+export class ViewAlumnoComponent  {
   alumno: Alumno | undefined;
 
-  constructor(
+  /*constructor(
     private readonly alumnoService: AlumnoService,
     private readonly route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
+  /!*ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
-    this.cargarAlumno(id);
-  }
+    this.(id);
+  }*!/
 
-  cargarAlumno(id: number): void {
+  /!*cargarAlumno(id: number): void {
     this.alumnoService.getAlumnoById(id).subscribe({
       next: (data) => {
         this.alumno = data;
@@ -37,5 +37,5 @@ export class ViewAlumnoComponent implements OnInit {
         console.error('Error al cargar el alumno:', error);
       }
     });
-  }
+  }*!*/
 }

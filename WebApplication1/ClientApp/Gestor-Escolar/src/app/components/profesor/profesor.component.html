@@ -3,4 +3,8 @@
   [columns]="columns"
   [globalFilterFields]="['nombre', 'apellidos', 'dni', 'email', 'telefono', 'asignaturasNombre']"
   (onAdd)="openNew()"
+  (onDelete)="deleteProfesor($event.id)"
+  (onEdit)="editProfesor($event)"
+
+
 ></app-table>

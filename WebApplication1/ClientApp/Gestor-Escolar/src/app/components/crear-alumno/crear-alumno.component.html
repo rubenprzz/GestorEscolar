@@ -91,14 +91,14 @@
         mode="basic"
         chooseLabel="Subir Foto"
         chooseIcon="pi pi-upload"
-        name="foto"
+        name="urlFoto"
         accept="image/*"
         maxFileSize="1000000"
         (onSelect)="onFileChange($event)"
         [auto]="false">
       </p-fileUpload>
     </div>
-    <small *ngIf="isFieldInvalid('foto')" class="p-error">La foto es obligatoria.</small>
+    <small *ngIf="isFieldInvalid('urlFoto')" class="p-error">La foto es obligatoria.</small>
 
     <div class="p-inputgroup mt-3">
       <span class="p-inputgroup-addon">
@@ -119,15 +119,23 @@
 
     <!-- DNIs de los Padres -->
     <div class="p-inputgroup mt-3">
-      <span class="p-inputgroup-addon">
-        <i class="pi pi-users"></i>
-      </span>
-      <input
-        pInputText
-        placeholder="DNI de los Padres (separados por comas)"
+  <span class="p-inputgroup-addon">
+    <i class="pi pi-users"></i>
+  </span>
+      <p-multiSelect
+        [options]="padres"
         formControlName="padresDnis"
-      />
+        [maxSelectedLabels]="2"
+        [filter]="true"
+        [showToggleAll]="false"
+        optionLabel="dni"
+        optionValue="dni"
+        [placeholder]="'Seleccionar padres'"
+        [virtualScroll]="true"
+        [itemSize]="30"
+      ></p-multiSelect>
     </div>
+
 
     <!-- Botón de Enviar -->
     <div class="mt-4">

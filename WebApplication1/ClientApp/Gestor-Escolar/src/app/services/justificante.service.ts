@@ -17,5 +17,12 @@ export class JustificanteService {
   createJustificante(justificante: any): Observable<any> {
     return this.http.post(this.apiUrl, justificante);
   }
+  updateJustificante(id: number, justificante:any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, justificante);
+  }
+
+  deleteJustificante(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
 
 }

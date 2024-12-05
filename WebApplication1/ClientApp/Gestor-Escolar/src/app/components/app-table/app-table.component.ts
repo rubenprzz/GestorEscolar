@@ -66,6 +66,7 @@ export class AppTableComponent implements OnInit {
   @Output() onEdit = new EventEmitter<any>();  // Emitir evento de edición
   @Output() onDelete = new EventEmitter<any>(); // Emitir evento de eliminación
   @Output() onAdd = new EventEmitter<void>();
+  @Output() onView = new EventEmitter<any>();
   formGroup!: FormGroup;
   items: MenuItem[] | null = null;
   selectedItems: any[] = [];
@@ -149,7 +150,7 @@ export class AppTableComponent implements OnInit {
 
   viewItem(item: any) {
     console.log('View item', item);
-    // Aquí puedes implementar la lógica para ver un item
+    this.onView.emit(item);
   }
 
   onSubmit() {

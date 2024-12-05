@@ -2,6 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {AsistenciaService} from '../../services/asistencia.service';
 import {AppTableComponent} from '../app-table/app-table.component';
 import {Asistencia} from '../../models/asistencia.model';
+import {CrearAlumnoComponent} from '../crear-alumno/crear-alumno.component';
+import {MessageService} from 'primeng/api';
+import {DialogService} from 'primeng/dynamicdialog';
+import {CreateAsistenciaComponent} from '../../create-asistencia/create-asistencia.component';
 
 @Component({
   selector: 'app-asistencia',
@@ -25,7 +29,7 @@ export class AsistenciaComponent implements OnInit {
     7: 'Domingo',
   };
 
-  constructor(private readonly as: AsistenciaService) {}
+  constructor(private readonly as: AsistenciaService,private readonly messageService:MessageService, private readonly dialogService:DialogService) {}
 
   columns = [
     { field: 'dia', header: 'Día', width: '16%', type: 'text' },
@@ -55,4 +59,33 @@ export class AsistenciaComponent implements OnInit {
       },
     });
   }
+
+  deleteAsistencia(id: number): void {
+    this.as.deleteAsistencia(id).subscribe({
+      next: () => {
+        this.asistencias = this.asistencias.filter((a) => a.id !== id);  // Eliminarlo de la lista local
+        this.messageService.add({ severity: 'success', summary: 'Exito', detail: 'Asistencia eliminada' });
+      },
+      error: (err) => {
+        console.error('Error al eliminar asistencia', err);
+      },
+    });
+  }
+  openNew() {
+    // Abre el dialog que contiene el formulario de crear alumno
+    const dialogRef = this.dialogService.open(CreateAsistenciaComponent, {
+      header: 'Crear Nueva Asistencia',  // Título del diálogo
+      width: '70%',
+    });
+
+    // Opcional: puedes escuchar si el alumno se crea correctamente
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarAsistencias();  // Recargar los alumnos si se crea uno nuevo
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Asistencia creada correctamente.'});
+      }
+    });
+  }
+
+
 }

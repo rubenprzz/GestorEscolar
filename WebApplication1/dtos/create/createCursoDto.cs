@@ -2,6 +2,7 @@
 
 public class createCursoDto
 {
+    public int Id { get; set; }
     public string? Nombre { get; set; }
     public DateOnly? FechaInicio { get; set; }
     public DateOnly? FechaFin { get; set; }

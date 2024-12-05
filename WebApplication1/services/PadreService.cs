@@ -80,7 +80,7 @@ namespace WebApplication1.Services
             };
 
             var alumnosSeleccionados = await _context.Alumnos
-                .Where(a => createPadreDto.AlumnosAsociados.Contains(a.Dni))
+                .Where(a => createPadreDto.Alumnos.Contains(a.Dni))
                 .ToListAsync();
 
             foreach (var alumno in alumnosSeleccionados)
@@ -95,17 +95,22 @@ namespace WebApplication1.Services
             return nuevoPadre;
         }
 
-        public async Task<Padre> ActualizarPadre(Padre padre)
+        public async Task<Padre> ActualizarPadre(createPadreDto padre)
         {
-            var padreExistente = await _context.Padres.FindAsync(padre.Id);
+            var padreExistente = await _context.Padres.FindAsync(padre.id);
             if (padreExistente == null)
             {
                 return null;
             }
-
+            padreExistente.Id = padre.id;
+            padreExistente.Dni = padre.Dni;
             padreExistente.Nombre = padre.Nombre;
             padreExistente.Apellidos = padre.Apellidos;
             padreExistente.Telefono = padre.Telefono;
+            padreExistente.Alumnos =  await _context.Alumnos
+                .Where(a => padre.Alumnos.Contains(a.Dni))
+                .ToListAsync();
+            
 
             _context.Padres.Update(padreExistente);
             await _context.SaveChangesAsync();

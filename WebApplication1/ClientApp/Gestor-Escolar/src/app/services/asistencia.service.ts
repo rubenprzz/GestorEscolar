@@ -17,4 +17,10 @@ export class AsistenciaService {
     return this.http.get(this.apiUrl);
 
   }
-}
+  createAsistencia(asistencia: any): Observable<any> {
+    return this.http.post(this.apiUrl, asistencia);
+  }
+  deleteAsistencia(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+  }

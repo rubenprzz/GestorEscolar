@@ -2,6 +2,7 @@
 
 public class createRetrasoDto
 {
+    public int Id { get; set; }
     public string? Fecha { get; set; }
     public string? AlumnoDni { get; set; }
     public TimeSpan HoraLlegada { get; set; }

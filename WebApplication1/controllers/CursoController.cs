@@ -53,13 +53,13 @@ public class CursoController : ControllerBase
         return CreatedAtAction(nameof(GetCurso), new { id = nuevoCurso.Id }, nuevoCurso);
     }
     [HttpPut("{id}")]
-    public async Task<ActionResult<Curso>> UpdateCurso(int id, [FromBody] Curso curso)
+    public async Task<ActionResult<Curso>> UpdateCurso(int id, [FromBody] createCursoDto curso)
     {
         if (curso == null || id != curso.Id)
         {
             return BadRequest("Los datos del curso son incorrectos.");
         }
-        var cursoActualizado = await _cursoService.ActualizarCurso(curso);
+        var cursoActualizado = await _cursoService.ActualizarCurso(id,curso);
         if (cursoActualizado == null)
         {
             return NotFound();

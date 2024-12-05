@@ -198,21 +198,27 @@ namespace WebApplication1.Services
 
 
 
-        public async Task<Alumno> ActualizarAlumno(Alumno alumno)
+        public async Task<Alumno> ActualizarAlumno(CrearAlumnoDto alumno,string imageUrl)
         {
-            var alumnoExistente = await _context.Alumnos.FindAsync(alumno.Id);
+            var alumnoExistente = await _context.Alumnos.FindAsync(alumno.id);
             if (alumnoExistente == null)
             {
                 return null;
             }
-
-            alumnoExistente.Nombre = alumno.Nombre;
-            alumnoExistente.Apellidos = alumno.Apellidos;
-            alumnoExistente.Dni = alumno.Dni;
-            alumnoExistente.FechaNacimiento = alumno.FechaNacimiento;
-            alumnoExistente.Email = alumno.Email;
-            alumnoExistente.Telefono = alumno.Telefono;
-
+            DateOnly fechaNacimiento = DateOnly.FromDateTime(alumno.FechaNacimiento);
+            
+            alumnoExistente.Nombre = alumno.nombre;
+            alumnoExistente.Apellidos = alumno.apellidos;
+            alumnoExistente.Dni = alumno.dni;
+            //pasar a dateonly
+            alumnoExistente.FechaNacimiento = fechaNacimiento;
+            alumnoExistente.Email = alumno.email;
+            alumnoExistente.Telefono = alumno.telefono;
+            alumnoExistente.Curso = alumno.cursoNombre != null ? await _context.Cursos.FirstOrDefaultAsync(c => c.Nombre == alumno.cursoNombre) : null;
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                alumnoExistente.urlFoto = imageUrl;
+            }
             _context.Alumnos.Update(alumnoExistente);
             await _context.SaveChangesAsync();
 

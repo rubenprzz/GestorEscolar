@@ -45,6 +45,17 @@ export class JustificanteComponent implements OnInit {
       }
     });
   }
+  deleteJustificante(id: number): void {
+    this.justificanteService.deleteJustificante(id).subscribe({
+      next: () => {
+        this.justificantes = this.justificantes.filter((a) => a.id !== id);  // Eliminarlo de la lista local
+        this.messageService.add({ severity: 'success', summary: 'Exito', detail: 'Justificante eliminado' });
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el justificante' });
+      }
+    });
+  }
 
   cargarJustificantes() {
     this.justificanteService.getJustificantes().subscribe({
@@ -56,6 +67,21 @@ export class JustificanteComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar justificantes:', error);
+      }
+    });
+  }
+  editJustificante(justificante: any) {
+    const dialogRef = this.dialogService.open(AddJustificanteComponent, {
+      header: 'Editar justificante',  // Título del diálogo
+      width: '70%',
+      data: {justificanteToEdit: justificante},
+    });
+
+    // Opcional: puedes escuchar si el alumno se crea correctamente
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarJustificantes();  // Recargar los alumnos si se crea uno nuevo
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Justificante editado correctamente.'});
       }
     });
   }

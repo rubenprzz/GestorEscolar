@@ -56,13 +56,13 @@ public class RetrasoController: ControllerBase
     }
     
     [HttpPut("{id}")]
-    public async Task<ActionResult<Retraso>> UpdateRetraso(int id, [FromBody] Retraso retraso)
+    public async Task<ActionResult<Retraso>> UpdateRetraso(int id, [FromBody] createRetrasoDto retraso)
     {
         if (retraso == null || id != retraso.Id)
         {
             return BadRequest("Los datos del retraso son incorrectos.");
         }
-        var retrasoActualizado = await _retrasoService.ActualizarRetraso(retraso);
+        var retrasoActualizado = await _retrasoService.ActualizarRetraso(id, retraso);
         if (retrasoActualizado == null)
         {
             return NotFound();

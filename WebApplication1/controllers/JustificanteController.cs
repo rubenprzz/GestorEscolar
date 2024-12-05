@@ -65,11 +65,36 @@ public class JustificanteController : ControllerBase
         return Ok(justificante);
     }
     
+    [HttpDelete("{id}")]
+    
+    public async Task<ActionResult> DeleteJustificante(int id)
+    {
+        var justificante = await _justificanteService.ObtenerJustificanteById(id);
+        if (justificante == null)
+        {
+            return NotFound();
+        }
+        await _justificanteService.deleteJustificante(justificante.Id);
+        return NoContent();
+    }
+    
     [HttpPost]
     public async Task<ActionResult<Justificante>> CreateJustificante([FromBody] createJustificanteDto dto)
     {
         var justificante = await _justificanteService.CreateJustificante(dto);
         return CreatedAtAction(nameof(GetJustificante), new { id = justificante.Id }, justificante);
+    }
+    
+    [HttpPut("{id}")]
+    public async Task<ActionResult<Justificante>> UpdateJustificante(int id, [FromBody] createJustificanteDto dto)
+    {
+        var justificante = await _justificanteService.ObtenerJustificanteById(dto.id);
+        if (justificante == null)
+        {
+            return NotFound();
+        }
+        await _justificanteService.EditJustificante(id, dto);
+        return NoContent();
     }
     
     
@@ -84,6 +109,8 @@ public class JustificanteController : ControllerBase
         }
         return Ok(justificante);
     }
+    
+    
   
 }
     

@@ -59,9 +59,9 @@ public class PadreController: ControllerBase
     }
     
     [HttpPut("{id}")]
-    public async Task<ActionResult<Padre>> UpdatePadre(int id, [FromBody] Padre padre)
+    public async Task<ActionResult<Padre>> UpdatePadre(int id, [FromBody] createPadreDto padre)
     {
-        if (padre == null || id != padre.Id)
+        if (padre == null || id != padre.id)
         {
             return BadRequest("Los datos del padre son incorrectos.");
         }

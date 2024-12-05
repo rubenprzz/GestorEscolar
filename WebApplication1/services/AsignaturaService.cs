@@ -72,10 +72,11 @@ namespace WebApplication1.Services
                 throw new Exception("El profesor especificado no existe.");
 
             // Buscar el curso asociado
-            var curso = await _context.Cursos
-                .FirstOrDefaultAsync(c => c.Nombre == dto.CursoNombres);
+            var cursos = await _context.Cursos
+                .Where(c => dto.CursoNombres.Contains(c.Nombre))
+                .ToListAsync();
 
-            if (curso == null)
+            if (cursos == null)
                 throw new Exception("El curso especificado no existe.");
 
             // Crear la nueva asignatura
@@ -84,7 +85,7 @@ namespace WebApplication1.Services
                 Nombre = dto.Nombre,
                 Profesor = profesor,
                 ProfesorId = profesor.Id,
-                Cursos = new List<Curso> { curso },
+                Cursos = cursos,
                 HorasDeClase = new List<Hora>() // Inicializamos la lista de horas
             };
 

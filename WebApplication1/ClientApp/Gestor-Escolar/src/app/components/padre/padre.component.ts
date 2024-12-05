@@ -6,6 +6,7 @@ import {CrearAlumnoComponent} from '../crear-alumno/crear-alumno.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {MessageService} from 'primeng/api';
 import {CreatePadreComponent} from '../../create-padre/create-padre.component';
+import {CreateProfesorComponent} from '../../create-profesor/create-profesor.component';
 
 @Component({
   selector: 'app-padre',
@@ -46,6 +47,20 @@ export class PadreComponent implements OnInit{
       },
     });
   }
+  cargarPadre(id:number){
+    this.padreService.getPadreById(id).subscribe({
+      next: (data) => {
+        this.padres = data.map((padre: Padre) => ({
+          ...padre,
+
+        }));
+      },
+      error: (error) => {
+        console.error('Error al cargar padres:', error);
+      },
+    });
+  }
+
   openNew() {
     // Abre el dialog que contiene el formulario de crear alumno
     const dialogRef = this.dialogService.open(CreatePadreComponent, {
@@ -58,6 +73,39 @@ export class PadreComponent implements OnInit{
       if (result) {
         this.cargarPadres();  // Recargar los alumnos si se crea uno nuevo
         this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Padre creado correctamente.'});
+      }
+    });
+    this.cargarPadres();
+  }
+  editPadre(padre: any) {
+    const dialogRef = this.dialogService.open(CreatePadreComponent, {
+      header: 'Editar Padre',
+      width: '70%',
+      data: {
+        padreToEdit: padre,
+      },
+    });
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarPadre(padre.id);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Padre actualizado correctamente.',
+        });
+        this.cargarPadres();
+      }
+    });
+  }
+
+  deletePadre(id: number): void {
+    this.padreService.deletePadre(id).subscribe({
+      next: () => {
+        this.padres = this.padres.filter((a) => a.id !== id);  // Eliminarlo de la lista local
+        this.messageService.add({ severity: 'success', summary: 'Exito', detail: 'Padre eliminado' });
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el padre' });
       }
     });
   }

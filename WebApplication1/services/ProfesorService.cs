@@ -92,14 +92,14 @@ namespace WebApplication1.Services
      
 
 
-        public async Task<Profesor> ActualizarProfesor(Profesor profesor)
+        public async Task<Profesor> ActualizarProfesor(createProfesorDto profesor)
         {
-            var profesorExistente = await _context.Profesores.FindAsync(profesor.Id);
+            var profesorExistente = await _context.Profesores.FindAsync(profesor.id);
             if (profesorExistente == null)
             {
                 return null;
             }
-
+            profesorExistente.Id = profesor.id;
             profesorExistente.Nombre = profesor.Nombre;
             profesorExistente.Apellidos = profesor.Apellidos;
             profesorExistente.Dni = profesor.Dni;

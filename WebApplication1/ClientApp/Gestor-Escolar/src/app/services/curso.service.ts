@@ -17,4 +17,12 @@ export class CursoService {
   createCurso(curso: any): Observable<any> {
     return this.http.post(this.apiUrl, curso);
   }
+  updateCurso(id:number,curso: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, curso);
+  }
+
+  deleteCurso(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+
+  }
 }

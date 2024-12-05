@@ -40,6 +40,17 @@ export class RetrasoComponent implements OnInit {
   ngOnInit() {
     this.cargarRetrasos();
   }
+  deleteRetraso(id: number): void {
+    this.retrasoService.deleteRetraso(id).subscribe({
+      next: () => {
+        this.retrasos = this.retrasos.filter((a) => a.id !== id);  // Eliminarlo de la lista local
+        this.messageService.add({ severity: 'success', summary: 'Exito', detail: 'Retraso eliminado' });
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el retraso' });
+      }
+    });
+  }
 
   cargarRetrasos() {
     this.retrasoService.getRetrasos().subscribe({
@@ -69,6 +80,20 @@ export class RetrasoComponent implements OnInit {
       if (result) {
         this.cargarRetrasos();  // Recargar los alumnos si se crea uno nuevo
         this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Retraso creado correctamente.'});
+      }
+    });
+  }
+  editRetraso(retraso: any) {
+    const dialogRef = this.dialogService.open(CreateRetrasoComponent, {
+      header: 'Editar Retraso',
+      width: '70%',
+      data: {retrasoToEdit: retraso}
+    });
+
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarRetrasos();
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Retraso actualizado correctamente.'});
       }
     });
   }

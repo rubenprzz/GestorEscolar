@@ -3,4 +3,6 @@
   [columns]="columns"
   [globalFilterFields]="['nombre', 'fechaInicio', 'fechaFin']"
   (onAdd)="openNew()"
+  (onDelete)="deleteCurso($event.id)"
+  (onEdit)="editCurso($event)"
 ></app-table>

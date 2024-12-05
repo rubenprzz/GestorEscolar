@@ -4,4 +4,6 @@
   [columns]="columns"
 [globalFilterFields]="['alias', 'descripcion', 'fechaJustificacion', 'asistenciaIdentificador', 'alumnoDni']"
   (onAdd)="openNew()"
+  (onDelete)="deleteJustificante($event.id)"
+  (onEdit)="editJustificante($event)"
 ></app-table>

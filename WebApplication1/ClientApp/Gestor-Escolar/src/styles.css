@@ -34,8 +34,8 @@ body {
   padding: 2rem;
   border-radius: 10px;
   margin-bottom: 1rem;
-  max-width: 200px;  /* Reducido el ancho */
-  min-height: 600px; /* Mayor altura mínima */
+  max-width: 400px;  /* Reducido el ancho */
+  min-height: 800px; /* Mayor altura mínima */
   margin: auto; /* Centrado automático */
 }
 
@@ -53,6 +53,10 @@ body {
 /* Estilo para los multiselects */
 .p-multiselect {
   width: 100% !important; /* Aseguramos que los multiselect tengan el mismo ancho */
+}
+.p-inputgroup {
+  width: 100%;
+  max-width: 500px; /* Ajusta según tus necesidades */
 }
 
 

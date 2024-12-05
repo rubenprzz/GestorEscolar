@@ -5,6 +5,8 @@
         public bool IsPresente { get; set; }
         public string alumnoDNI { get; set; }
         public string asignaturaNombre { get; set; }
+        
+        
 
     }
 }

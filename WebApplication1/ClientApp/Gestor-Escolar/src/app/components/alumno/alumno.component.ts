@@ -104,21 +104,33 @@ export class AlumnoComponent implements OnInit {
       }
     });
   }
-
+  cargarAlumno(id: string): void {
+    this.alumnoService.getAlumnoById(id).subscribe({
+      next: (data) => {
+        this.selectedAlumno = data;
+      },
+      error: (error) => {
+        console.error('Error al cargar el alumno:', error);
+      }
+    });
+  }
   editAlumno(alumno: any): void {
     const ref: DynamicDialogRef = this.dialogService.open(CrearAlumnoComponent, {
       header: 'Editar Alumno',
       width: '70%',
-      data: { alumnoToEdit: alumno }
+      data: { alumnoToEdit: alumno }, // Pasar solo el ID
     });
 
     ref.onClose.subscribe((result) => {
       if (result) {
-        this.cargarAlumnos();  // Recargar los alumnos si se editó correctamente
-        this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Alumno actualizado correctamente.'});
+        this.cargarAlumno(alumno.id);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Alumno actualizado correctamente.',
+        });
       }
     });
-    this.cargarAlumnos();
   }
 
   saveAlumno() {

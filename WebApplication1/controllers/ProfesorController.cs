@@ -45,9 +45,9 @@ public class ProfesorController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Profesor>> UpdateProfesor(int id, [FromBody] Profesor profesor)
+    public async Task<ActionResult<Profesor>> UpdateProfesor(int id, [FromBody] createProfesorDto profesor)
     {
-        if (profesor == null || id != profesor.Id)
+        if (profesor == null || id != profesor.id)
         {
             return BadRequest("Los datos del profesor son incorrectos.");
         }

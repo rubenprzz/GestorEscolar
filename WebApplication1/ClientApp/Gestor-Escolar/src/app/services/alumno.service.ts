@@ -18,13 +18,14 @@ export class AlumnoService {
   createAlumno(alumno: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, alumno);
   }
-  getAlumnoById(id: number): Observable<any> {
+  getAlumnoById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  updateAlumno(id: string, formData: FormData): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, formData);
+  updateAlumno(dni: string, formData: FormData): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${dni}`, formData);
   }
+
 
 
   deleteAlumno(id: string): Observable<any> {

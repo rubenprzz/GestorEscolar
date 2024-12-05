@@ -128,22 +128,48 @@ namespace WebApplication1.Services
 
 
 
-        public async Task<Retraso> ActualizarRetraso(Retraso retraso)
+        public async Task<Retraso> ActualizarRetraso(int id, createRetrasoDto retraso)
         {
-            var retrasoExistente = await _context.Retrasos.FindAsync(retraso.Id);
-            if (retrasoExistente == null)
+            var retrasoDb = await _context.Retrasos.FindAsync(id);
+            if (retrasoDb == null)
             {
-                return null;
+                throw new Exception("Retraso no encontrado.");
             }
 
-            retrasoExistente.Fecha = retraso.Fecha;
-            retrasoExistente.Motivo = retraso.Motivo;
-            retrasoExistente.AlumnoId = retraso.AlumnoId;
+            // Convertir la fecha recibida a UTC
+            var fechaUtc = DateTime.SpecifyKind(DateTime.Parse(retraso.Fecha), DateTimeKind.Utc);
 
-            _context.Retrasos.Update(retrasoExistente);
+            // Obtener la asignatura y su hora de inicio
+            var asignatura = await _context.Asignaturas
+                .Include(a => a.HorasDeClase)
+                .FirstOrDefaultAsync(a => a.Nombre == retraso.AsignaturaNombre);
+
+            if (asignatura == null || !asignatura.HorasDeClase.Any())
+                throw new Exception("La asignatura no tiene horas de clase definidas.");
+
+            var horaInicio = asignatura.HorasDeClase.First().HoraInicio;
+
+            var alumno = await _context.Alumnos.FirstOrDefaultAsync(a => a.Dni == retraso.AlumnoDni);
+            if (alumno == null)
+            {
+                throw new Exception($"Alumno con DNI {retraso.AlumnoDni} no encontrado.");
+            }
+
+            // Actualizar los datos del retraso
+            retrasoDb.Fecha = fechaUtc;
+            retrasoDb.AlumnoId = alumno.Id;
+            retrasoDb.HoraLlegada = retraso.HoraLlegada;
+            retrasoDb.Motivo = retraso.Motivo;
+            retrasoDb.Justificado = retraso.Justificado;
+            retrasoDb.AsignaturaId = asignatura.Id;
+
+            // Calcular minutos de retraso
+            retrasoDb.MinutosRetraso = retrasoDb.CalcularMinutosDeRetraso(horaInicio);
+
+            // Guardar en la base de datos
             await _context.SaveChangesAsync();
 
-            return retrasoExistente;
+            return retrasoDb;
         }
 
         public async Task<bool> EliminarRetraso(int id)

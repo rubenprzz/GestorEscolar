@@ -28,6 +28,7 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 export class ProfesorComponent implements OnInit {
 
   profesores: any[] = [];
+  selectedProfesor: any = {};
 
   constructor(private readonly profesorService: ProfesorService, private readonly dialogService: DialogService, private readonly messageService: MessageService) {
   }
@@ -45,17 +46,62 @@ export class ProfesorComponent implements OnInit {
     {field: 'asignaturasNombre', header: 'Asignaturas', width: '16%', type: 'text'},
   ];
 
+
+
   cargarProfesores() {
     this.profesorService.getProfesores().subscribe({
       next: (data) => {
         this.profesores = data.map((profesor: Profesor) => ({
           ...profesor,
-          asignaturasNombre: profesor.asignaturas?.map((asignatura: Asignatura) => asignatura.nombre).join(', ') || 'Sin asignaturas',
+          asignaturasNombre: profesor.asignaturas?.map((asignatura: Asignatura) => asignatura.nombre).join(', ') ?? 'Sin asignaturas',
         }));
       },
       error: (error) => {
         console.error('Error al cargar profesores:', error);
       },
+    });
+  }
+
+  cargarProfesor(id: number): void {
+    this.profesorService.getPronfesorById(id).subscribe({
+      next: (data) => {
+        this.selectedProfesor = data;
+      },
+      error: (error) => {
+        console.error('Error al cargar el alumno:', error);
+      }
+    });
+  }
+
+  deleteProfesor(id: number): void {
+    this.profesorService.deleteProfesor(id).subscribe({
+      next: () => {
+        this.profesores = this.profesores.filter((a) => a.id !== id);  // Eliminarlo de la lista local
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Profesor eliminado'});
+      },
+      error: (error) => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al eliminar el profesor'});
+      }
+    });
+  }
+
+  editProfesor(profesor: any) {
+    const dialogRef = this.dialogService.open(CreateProfesorComponent, {
+      header: 'Editar Profesor',
+      width: '70%',
+      data: {
+        profesorToEdit: profesor,
+      },
+    });
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarProfesor(profesor.id);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Alumno actualizado correctamente.',
+        });
+      }
     });
   }
 
