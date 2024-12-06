@@ -46,6 +46,7 @@ export class AddJustificanteComponent implements OnInit {
 
     const justificanteToEdit = this.config?.data.justificanteToEdit;
 
+
     this.justificanteForm = this.fb.group({
       id: [justificanteToEdit.id || ''],
       alias: [{value: justificanteToEdit.alias, disabled: true}],

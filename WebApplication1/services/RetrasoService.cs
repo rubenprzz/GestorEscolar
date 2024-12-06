@@ -113,6 +113,7 @@ namespace WebApplication1.Services
                 Motivo = createDto.Motivo,
                 Justificado = createDto.Justificado,
                 AsignaturaId = asignatura.Id,
+                isDeleted = false
             };
 
             // Calcular minutos de retraso
@@ -177,7 +178,8 @@ namespace WebApplication1.Services
             var retraso = await _context.Retrasos.FindAsync(id);
             if (retraso != null)
             {
-                _context.Retrasos.Remove(retraso);
+                retraso.isDeleted = true;
+                _context.Retrasos.Update(retraso);
                 await _context.SaveChangesAsync();
                 return true;
             }

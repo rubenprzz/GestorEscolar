@@ -223,7 +223,8 @@ namespace WebApplication1.Services
             var justificante = await _context.Justificantes.FindAsync(id);
             if (justificante != null)
             {
-                _context.Justificantes.Remove(justificante);
+                justificante.isDeleted = true;
+                _context.Justificantes.Update(justificante);
                 await _context.SaveChangesAsync();
                 return true;
             }

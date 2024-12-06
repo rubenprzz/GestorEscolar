@@ -46,10 +46,10 @@ export class CreateRetrasoComponent implements OnInit {
     this.loadAsignaturas();
 
     const retrasoToEdit = this.config?.data.retrasoToEdit;
-
+    const fecha = retrasoToEdit.fecha ? new Date(retrasoToEdit.fecha) : null;
     this.retrasoForm = this.fb.group({
       id: [retrasoToEdit.id || ''],
-      fecha: [retrasoToEdit.fecha || '', Validators.required],
+      fecha: [fecha || '', Validators.required],
       minutosRetraso: [retrasoToEdit.minutosRetraso || '', Validators.required],
       horaLlegada: [retrasoToEdit.horaLlegada || '', Validators.required],
       alumnoDni: [retrasoToEdit.alumnoDni || '', Validators.required],
@@ -143,9 +143,9 @@ export class CreateRetrasoComponent implements OnInit {
     }
 
     // Si hay un ID en el retrasoToEdit, significa que estamos editando un retraso existente
-    if (this.retrasoToEdit && this.retrasoToEdit.id) {
+    if (retrasoData.id) {
       // Editar un retraso existente
-      this.retrasoService.updateRetraso(this.retrasoToEdit.id, retrasoData).subscribe({
+      this.retrasoService.updateRetraso(retrasoData.id, retrasoData).subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',

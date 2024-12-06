@@ -29,7 +29,6 @@ export class JustificanteComponent implements OnInit {
     { field: 'descripcion', header: 'Descripcion', width: '22%', type: 'text' },
     { field: 'fechaJustificacion', header: 'Fecha', width: '22%', type: 'text' },
     { field: 'asistenciaIdentificador', header: 'Identificador de asistencia', width: '12%', type: 'text' },
-    { field: 'alumnoDni', header: 'DNI del alumno', width: '22%', type: 'text' },
   ];
   openNew() {
     const dialogRef = this.dialogService.open(AddJustificanteComponent, {

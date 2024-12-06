@@ -10,6 +10,7 @@
         public Alumno? Alumno { get; set; }
         public Boolean Justificado { get; set; }
         public string? Motivo { get; set; }
+        public bool isDeleted { get; set; }
 
         public int AsignaturaId { get; set; }
         public Asignatura Asignatura { get; set; }

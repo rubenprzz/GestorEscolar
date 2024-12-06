@@ -94,6 +94,11 @@ namespace WebApplication1.Services
 
         public async Task<Profesor> ActualizarProfesor(createProfesorDto profesor)
         {
+            
+            var asignaturas = await _context.Asignaturas
+                .Where(a => profesor.asignaturasId.Contains(a.Id))
+                .ToListAsync();
+            
             var profesorExistente = await _context.Profesores.FindAsync(profesor.id);
             if (profesorExistente == null)
             {
@@ -105,6 +110,7 @@ namespace WebApplication1.Services
             profesorExistente.Dni = profesor.Dni;
             profesorExistente.Email = profesor.Email;
             profesorExistente.Telefono = profesor.Telefono;
+            profesorExistente.Asignaturas = asignaturas;
 
             _context.Profesores.Update(profesorExistente);
             await _context.SaveChangesAsync();
@@ -117,7 +123,8 @@ namespace WebApplication1.Services
             var profesor = await _context.Profesores.FindAsync(id);
             if (profesor != null)
             {
-                _context.Profesores.Remove(profesor);
+                profesor.isDeleted = true;
+                _context.Profesores.Update(profesor);
                 await _context.SaveChangesAsync();
                 return true;
             }
