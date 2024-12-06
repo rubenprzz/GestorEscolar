@@ -20,7 +20,8 @@ namespace WebApplication1.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nombre = table.Column<string>(type: "text", nullable: false),
                     FechaInicio = table.Column<DateOnly>(type: "date", nullable: false),
-                    FechaFin = table.Column<DateOnly>(type: "date", nullable: false)
+                    FechaFin = table.Column<DateOnly>(type: "date", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,7 +37,8 @@ namespace WebApplication1.Migrations
                     Nombre = table.Column<string>(type: "text", nullable: false),
                     Apellidos = table.Column<string>(type: "text", nullable: false),
                     Dni = table.Column<string>(type: "text", nullable: false),
-                    Telefono = table.Column<string>(type: "text", nullable: false)
+                    Telefono = table.Column<string>(type: "text", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,6 +55,7 @@ namespace WebApplication1.Migrations
                     Apellidos = table.Column<string>(type: "text", nullable: false),
                     Dni = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     Telefono = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -114,7 +117,8 @@ namespace WebApplication1.Migrations
                     Telefono = table.Column<string>(type: "text", nullable: false),
                     urlFoto = table.Column<string>(type: "text", nullable: false),
                     CursoId = table.Column<int>(type: "integer", nullable: false),
-                    imagen = table.Column<string>(type: "text", nullable: true)
+                    imagen = table.Column<string>(type: "text", nullable: true),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -134,7 +138,8 @@ namespace WebApplication1.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nombre = table.Column<string>(type: "text", nullable: false),
-                    ProfesorId = table.Column<int>(type: "integer", nullable: false)
+                    ProfesorId = table.Column<int>(type: "integer", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,6 +293,7 @@ namespace WebApplication1.Migrations
                     HoraFin = table.Column<TimeSpan>(type: "interval", nullable: false),
                     Identificador = table.Column<string>(type: "text", nullable: false),
                     IsPresente = table.Column<bool>(type: "boolean", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     AlumnoId = table.Column<int>(type: "integer", nullable: false),
                     AsignaturaId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -341,7 +347,8 @@ namespace WebApplication1.Migrations
                     Dia = table.Column<int>(type: "integer", nullable: false),
                     HoraInicio = table.Column<TimeSpan>(type: "interval", nullable: false),
                     HoraFin = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    AsignaturaId = table.Column<int>(type: "integer", nullable: false)
+                    AsignaturaId = table.Column<int>(type: "integer", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -363,6 +370,7 @@ namespace WebApplication1.Migrations
                     NotaValue = table.Column<decimal>(type: "numeric", nullable: false),
                     Fecha = table.Column<DateOnly>(type: "date", nullable: false),
                     Motivo = table.Column<string>(type: "text", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     AlumnoId = table.Column<int>(type: "integer", nullable: false),
                     AsignaturaId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -393,8 +401,9 @@ namespace WebApplication1.Migrations
                     MinutosRetraso = table.Column<int>(type: "integer", nullable: false),
                     HoraLlegada = table.Column<TimeSpan>(type: "interval", nullable: false),
                     AlumnoId = table.Column<int>(type: "integer", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     Justificado = table.Column<bool>(type: "boolean", nullable: false),
-                    Motivo = table.Column<string>(type: "text", nullable: false),
+                    Motivo = table.Column<string>(type: "text", nullable: true),
                     AsignaturaId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -425,6 +434,7 @@ namespace WebApplication1.Migrations
                     Motivo = table.Column<string>(type: "text", nullable: false),
                     AlumnoId = table.Column<int>(type: "integer", nullable: false),
                     AsistenciaId = table.Column<int>(type: "integer", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     Alias = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>

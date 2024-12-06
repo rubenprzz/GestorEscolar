@@ -12,5 +12,7 @@ namespace WebApplication1.Models
         public ICollection<Alumno> Alumnos { get; set; }
         [JsonIgnore]
         public ICollection<Asignatura> Asignaturas { get; set; }
+        public bool isDeleted { get; set; }
+
     }
 }

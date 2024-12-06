@@ -3,8 +3,10 @@
   [columns]="columns"
   [globalFilterFields]="['nombre', 'apellidos', 'dni', 'curso', 'urlFoto']"
   (onEdit)="editAlumno($event)"
+  (onView)="viewAlumno($event)"
   (onDelete)="deleteAlumno($event.id)"
   (onAdd)="openNew()">
+
 
 </app-table>
 

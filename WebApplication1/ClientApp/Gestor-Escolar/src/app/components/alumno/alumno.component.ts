@@ -10,6 +10,7 @@ import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import { CrearAlumnoComponent } from '../crear-alumno/crear-alumno.component';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ViewAlumnoComponent} from '../view-alumno/view-alumno.component';
 
 
 @Component({
@@ -114,6 +115,20 @@ export class AlumnoComponent implements OnInit {
       }
     });
   }
+  viewAlumno(alumno: any): void {
+    const ref: DynamicDialogRef = this.dialogService.open(ViewAlumnoComponent, {
+      header: 'Ver Alumno',
+      width: '70%',
+      data: { alumnoToView: alumno }, // Pass the entire alumno object
+    });
+
+    ref.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarAlumno(alumno.id);
+      }
+    });
+  }
+
   editAlumno(alumno: any): void {
     const ref: DynamicDialogRef = this.dialogService.open(CrearAlumnoComponent, {
       header: 'Editar Alumno',

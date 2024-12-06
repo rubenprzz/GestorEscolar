@@ -17,6 +17,7 @@ public class Alumno
     public int CursoId { get; set; }
     public Curso Curso { get; set; }
     public string? imagen { get; set; }
+    public bool isDeleted { get; set; }
 
     public ICollection<Padre> Padres { get; set; }
     [JsonIgnore]

@@ -9,6 +9,8 @@ public class Profesor
     public string Apellidos { get; set; }
     public string Dni { get; set; }
     public string Email { get; set; }
+    public bool isDeleted { get; set; }
+
     public string Telefono { get; set; }
     [JsonIgnore]
     public ICollection<Asignatura> Asignaturas { get; set; }

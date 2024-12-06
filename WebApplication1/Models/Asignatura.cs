@@ -9,6 +9,8 @@ public class Asignatura
     
     public int ProfesorId { get; set; }
     public Profesor Profesor { get; set; }
+    public bool isDeleted { get; set; }
+
 
     public ICollection<Curso> Cursos { get; set; }
     [JsonIgnore]

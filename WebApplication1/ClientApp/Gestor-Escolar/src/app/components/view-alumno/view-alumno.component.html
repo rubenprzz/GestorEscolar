@@ -1,44 +1,38 @@
-<p-card header="Detalles del Alumno" subheader="{{ alumno?.nombre }} {{ alumno?.apellidos }}" [style]="{ width: '100%' }">
-  <ng-template pTemplate="header">
-    <img alt="Alumno" src="https://example.com/imagen-del-alumno.jpg" />
-  </ng-template>
-
-  <div>
-    <h4>Información Básica:</h4>
-    <p><strong>Nombre:</strong> {{ alumno?.nombre }} {{ alumno?.apellidos }}</p>
+<p-accordion [activeIndex]="0">
+  <p-accordionTab header="Información Personal">
+    <p><strong>Nombre:</strong> {{ alumno?.nombre }}</p>
+    <p><strong>Apellidos:</strong> {{ alumno?.apellidos }}</p>
     <p><strong>DNI:</strong> {{ alumno?.dni }}</p>
-    <p><strong>Fecha de Nacimiento:</strong> {{ alumno?.fechaNacimiento }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ alumno?.fechaNacimiento | date }}</p>
     <p><strong>Email:</strong> {{ alumno?.email }}</p>
-    <p><strong>Teléfono:</strong> {{ alumno?.telefono || 'No proporcionado' }}</p>
-    <p><strong>Curso:</strong> {{ alumno?.cursoNombre }}</p>
-  </div>
+    <p><strong>Teléfono:</strong> {{ alumno?.telefono }}</p>
+    <img style="width:200px; min-height: 200px" *ngIf="alumno?.urlFoto" [src]="alumno?.urlFoto" alt="Foto de {{ alumno?.nombre }}" class="foto-alumno">
+  </p-accordionTab>
 
-  <div class="mt-3">
-    <h4>Asistencias:</h4>
-    <p><strong>Cantidad de Asistencias Faltadas:</strong> {{ alumno?.cantidadAsistenciasFaltadas }}</p>
-  </div>
+  <p-accordionTab header="Curso">
+    <p><strong>Curso:</strong> {{ alumno?.curso }}</p>
+  </p-accordionTab>
 
-  <div class="mt-3">
-    <h4>Retrasos:</h4>
-    <p><strong>Cantidad de Retrasos:</strong> {{ alumno?.cantidadRetrasos }}</p>
-  </div>
-
-  <div class="mt-3">
-    <h4>Padres:</h4>
+  <p-accordionTab header="Padres">
+    <p *ngIf="(alumno?.padres?.length ?? 0) > 0; else noPadres">
+      <strong>DNI de los Padres:</strong>
     <ul>
-      <li *ngFor="let padre of alumno?.padres">
-        <strong>{{ padre.nombre }}</strong> (DNI: {{ padre.dni }})
-      </li>
+      <li *ngFor="let padre of alumno?.padres">{{ padres }}</li>
     </ul>
-  </div>
+    <ng-template #noPadres>
+      <p>No se han registrado padres para este alumno.</p>
+    </ng-template>
+  </p-accordionTab>
 
-  <div class="mt-3">
-    <h4>Notas:</h4>
-    <ul>
-      <li *ngFor="let nota of alumno?.notas">
-        <strong>{{ nota.asignatura }}:</strong> {{ nota.valor }}
-      </li>
-    </ul>
-  </div>
-
-</p-card>
+  <p-accordionTab header="Retrasos y Justificantes">
+    <p *ngIf="(retrasos?.length ?? 0) > 0; else noRetrasos">
+    <div *ngFor="let retraso of retrasos" class="retraso-card">
+      <p><strong>Fecha:</strong> {{ retraso.fecha | date }}</p>
+      <p><strong>Motivo:</strong> {{ retraso.motivo }}</p>
+      <p><strong>Justificado:</strong> {{ retraso.justificado ? 'Sí' : 'No' }}</p>
+    </div>
+    <ng-template #noRetrasos>
+      <p>No se han registrado retrasos ni justificantes para este alumno.</p>
+    </ng-template>
+  </p-accordionTab>
+</p-accordion>

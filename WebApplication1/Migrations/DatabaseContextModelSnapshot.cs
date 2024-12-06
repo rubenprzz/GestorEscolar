@@ -72,6 +72,9 @@ namespace WebApplication1.Migrations
                     b.Property<TimeSpan>("HoraInicio")
                         .HasColumnType("interval");
 
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AsignaturaId");
@@ -316,6 +319,9 @@ namespace WebApplication1.Migrations
                     b.Property<string>("imagen")
                         .HasColumnType("text");
 
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("isPresente")
                         .HasColumnType("boolean");
 
@@ -344,6 +350,9 @@ namespace WebApplication1.Migrations
 
                     b.Property<int>("ProfesorId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -382,6 +391,9 @@ namespace WebApplication1.Migrations
                     b.Property<bool>("IsPresente")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AlumnoId");
@@ -408,6 +420,9 @@ namespace WebApplication1.Migrations
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -443,6 +458,9 @@ namespace WebApplication1.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AlumnoId");
@@ -475,6 +493,9 @@ namespace WebApplication1.Migrations
 
                     b.Property<decimal>("NotaValue")
                         .HasColumnType("numeric");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -509,6 +530,9 @@ namespace WebApplication1.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("Padres");
@@ -542,6 +566,9 @@ namespace WebApplication1.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("Profesores");
@@ -574,8 +601,10 @@ namespace WebApplication1.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Motivo")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

@@ -12,7 +12,8 @@ public class Justificante
 
     public int AsistenciaId { get; set; }
     public Asistencia Asistencia { get; set; }
-    
+    public bool isDeleted { get; set; }
+
     
     public string Alias { get; set; }
     

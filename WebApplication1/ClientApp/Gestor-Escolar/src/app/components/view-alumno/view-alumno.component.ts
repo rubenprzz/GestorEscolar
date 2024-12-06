@@ -1,41 +1,79 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AlumnoService } from '../../services/alumno.service';
+
 import { Alumno } from '../../models/alumno.model';
-import {AlumnoService} from '../../services/alumno.service';
-import {ActivatedRoute} from '@angular/router';
-import {Button} from 'primeng/button';
-import {CardModule} from 'primeng/card';
+import { MessageService } from 'primeng/api';
+import {AccordionModule} from 'primeng/accordion';
+import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {DynamicDialogConfig} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-alumno-details',
   templateUrl: './view-alumno.component.html',
-  standalone: true,
-  styleUrls: ['view-alumno.component.css'],
+  styleUrls: ['./view-alumno.component.css'],
   imports: [
-    Button,
-    CardModule
-  ]
+    AccordionModule,
+    DatePipe,
+    NgIf,
+    NgForOf
+  ],
+  standalone: true
 })
-export class ViewAlumnoComponent  {
-  alumno: Alumno | undefined;
+export class ViewAlumnoComponent implements OnInit {
+  @Input() alumnoToView: any | undefined;
+  alumno: any | undefined;
+  retrasos: any[] = [];
+  padres: any[] = [];
 
-  /*constructor(
+  constructor(
     private readonly alumnoService: AlumnoService,
-    private readonly route: ActivatedRoute
-  ) {}
+    private readonly messageService: MessageService,
+    public config: DynamicDialogConfig
+  ) {
+  }
 
-  /!*ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id')!;
-    this.(id);
-  }*!/
+  ngOnInit(): void {
+    if (this.config.data.alumnoToView) {
+      this.alumno = this.config.data.alumnoToView;
+    }
 
-  /!*cargarAlumno(id: number): void {
-    this.alumnoService.getAlumnoById(id).subscribe({
-      next: (data) => {
-        this.alumno = data;
-      },
-      error: (error) => {
-        console.error('Error al cargar el alumno:', error);
-      }
-    });
-  }*!*/
+
+    // Cargar todos los retrasos de un alumno
+    /* loadRetrasos(): void {
+       if (this.alumno?.id) {
+         this.retrasoService.getRetrasosByAlumno(this.alumno.id).subscribe({
+           next: (data: any[]) => {
+             this.retrasos = data;
+           },
+           error: (error: any) => {
+             console.error('Error al cargar los retrasos:', error);
+             this.messageService.add({
+               severity: 'error',
+               summary: 'Error',
+               detail: 'No se pudieron cargar los retrasos',
+             });
+           },
+         });
+       }
+     }
+
+     // Cargar todos los padres de un alumno (si tienes un array de DNIs)
+     loadPadres(): void {
+       if (this.alumno?.id) {
+         this.padreService.getPadresByAlumno(this.alumno.id).subscribe({
+           next: (data: any[]) => {
+             this.padres = data; // Aquí asignamos los datos de los padres
+           },
+           error: (error: any) => {
+             console.error('Error al cargar los padres:', error);
+             this.messageService.add({
+               severity: 'error',
+               summary: 'Error',
+               detail: 'No se pudieron cargar los padres',
+             });
+           },
+         });
+       }
+     }*/
+  }
 }

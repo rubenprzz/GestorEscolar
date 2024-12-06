@@ -11,4 +11,6 @@ public class Padre
     public string Telefono { get; set; }
     [JsonIgnore]
     public ICollection<Alumno> Alumnos { get; set; }
+    public bool isDeleted { get; set; }
+
 }

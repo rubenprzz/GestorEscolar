@@ -8,6 +8,8 @@ public class Hora
     public TimeSpan HoraFin { get; set; }
     public int AsignaturaId { get; set; }
     public Asignatura Asignatura { get; set; }
+    public bool isDeleted { get; set; }
+
    
 }
 public enum DiaSemana

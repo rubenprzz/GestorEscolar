@@ -6,6 +6,7 @@
         public decimal NotaValue { get; set; }
         public DateOnly Fecha { get; set; }
         public string Motivo { get; set; }
+        public bool isDeleted { get; set; }
 
         public int AlumnoId { get; set; }
         public Alumno Alumno { get; set; }
