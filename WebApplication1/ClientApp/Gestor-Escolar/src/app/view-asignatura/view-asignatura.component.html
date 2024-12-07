@@ -1,14 +1,23 @@
-<div class="asignatura-details">
-  <h2>Detalles de la Asignatura</h2>
+<p-accordion [activeIndex]="0">
+  <!-- Información General -->
+  <p-accordionTab header="Información General">
+    <p><strong>ID:</strong> {{ asignatura?.id }}</p>
+    <p><strong>Nombre:</strong> {{ asignatura?.nombre }}</p>
+    <p><strong>Profesor DNI:</strong> {{ asignatura?.profesorDni }}</p>
+  </p-accordionTab>
 
-  <p><strong>ID:</strong> {{ asignatura?.id }}</p>
-  <p><strong>Nombre:</strong> {{ asignatura?.nombre }}</p>
-  <p><strong>Profesor DNI:</strong> {{ asignatura?.profesorDni }}</p>
-  <p><strong>Días:</strong> {{ asignatura?.dias?.join(', ') }}</p>
+  <!-- Información de Horarios -->
+  <p-accordionTab header="Información de Horarios">
+    <p><strong>Días:</strong> {{ asignatura?.dias?.join(', ') }}</p>
+    <p><strong>Horas de Inicio:</strong> {{ asignatura?.horasInicio?.join(', ') }}</p>
+    <p><strong>Horas de Fin:</strong> {{ asignatura?.horasFin?.join(', ') }}</p>
+  </p-accordionTab>
 
-  <p><strong>Horarios:</strong></p>
-  <p><strong>Horas Inicio:</strong> {{ asignatura?.horasInicio?.join(', ') }}</p>
-  <p><strong>Horas Fin:</strong> {{ asignatura?.horasFin?.join(', ') }}</p>
-
-
-</div>
+  <!-- Información de Cursos -->
+  <p-accordionTab header="Cursos Asociados">
+    <p><strong>Nombre de los Cursos:</strong></p>
+    <ul>
+      <li *ngFor="let curso of asignatura?.cursoNombres">{{ curso }}</li>
+    </ul>
+  </p-accordionTab>
+</p-accordion>

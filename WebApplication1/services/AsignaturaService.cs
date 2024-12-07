@@ -36,7 +36,9 @@ namespace WebApplication1.Services
                     profesorDni = a.Profesor.Dni,
                     HorasInicio = a.HorasDeClase.Select(h => h.HoraInicio.ToString(@"hh\:mm")).ToList(),
                     HorasFin = a.HorasDeClase.Select(h => h.HoraFin.ToString(@"hh\:mm")).ToList(),
-                    Dias = a.HorasDeClase.Select(h => h.Dia.ToString()).ToList()  
+                    Dias = a.HorasDeClase.Select(h => h.Dia.ToString()).ToList(),
+                    CursoNombres =  a.Cursos.Select(c => c.Nombre).ToList()
+                    
                 })
                 .ToListAsync();
         }
@@ -139,22 +141,67 @@ namespace WebApplication1.Services
                 .FirstOrDefaultAsync(a => a.Nombre == nombre);
         }
 
-        public async Task<Asignatura> ActualizarAsignatura(Asignatura asignatura)
+        public async Task<Asignatura?> ActualizarAsignatura(createAsignaturaDto dto)
+{
+        
+    
+    var asignaturaExistente = await _context.Asignaturas
+        .Include(a => a.HorasDeClase)
+        .Include(a => a.Cursos)
+        .FirstOrDefaultAsync(a => a.Id == dto.id);
+
+    if (asignaturaExistente == null)
+    {
+        return null; 
+    }
+
+    asignaturaExistente.Nombre = dto.Nombre;
+
+    if (!string.IsNullOrEmpty(dto.ProfesorDni))
+    {
+        var profesor = await _context.Profesores
+            .FirstOrDefaultAsync(p => p.Dni == dto.ProfesorDni);
+
+        if (profesor == null)
         {
-            var asignaturaExistente = await _context.Asignaturas.FindAsync(asignatura.Id);
-            if (asignaturaExistente == null)
-            {
-                return null;
-            }
-
-            asignaturaExistente.Nombre = asignatura.Nombre;
-            asignaturaExistente.ProfesorId = asignatura.ProfesorId;
-
-            _context.Asignaturas.Update(asignaturaExistente);
-            await _context.SaveChangesAsync();
-
-            return asignaturaExistente;
+            throw new Exception("El profesor especificado no existe.");
         }
+
+        asignaturaExistente.Profesor = profesor;
+        asignaturaExistente.ProfesorId = profesor.Id;
+    }
+
+    // Actualizar la lista de cursos asociados
+    if (dto.CursoNombres != null && dto.CursoNombres.Any())
+    {
+        var cursos = await _context.Cursos
+            .Where(c => dto.CursoNombres.Contains(c.Nombre))
+            .ToListAsync();
+
+        asignaturaExistente.Cursos = cursos;
+    }
+
+    asignaturaExistente.HorasDeClase.Clear(); 
+    for (int i = 0; i < dto.HorasInicio.Count; i++)
+    {
+        var hora = new Hora
+        {
+            AsignaturaId = asignaturaExistente.Id,
+            Dia = Enum.Parse<DiaSemana>(dto.Dias[i]),
+            HoraInicio = TimeSpan.Parse(dto.HorasInicio[i]), 
+            HoraFin = TimeSpan.Parse(dto.HorasFin[i]) 
+        };
+        asignaturaExistente.HorasDeClase.Add(hora);
+    }
+    
+
+    // Guardar los cambios en la base de datos
+    _context.Asignaturas.Update(asignaturaExistente);
+    await _context.SaveChangesAsync();
+
+    return asignaturaExistente;
+}
+
 
         public async Task<bool> EliminarAsignatura(int id)
         {

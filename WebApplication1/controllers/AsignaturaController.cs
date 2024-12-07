@@ -53,9 +53,9 @@ public class AsignaturaController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Asignatura>> UpdateAsignatura(int id, [FromBody] Asignatura asignatura)
+    public async Task<ActionResult<Asignatura>> UpdateAsignatura(int id, [FromBody] createAsignaturaDto asignatura)
     {
-        if (asignatura == null || id != asignatura.Id)
+        if (asignatura == null || id != asignatura.id)
         {
             return BadRequest("Los datos de la asignatura son incorrectos.");
         }

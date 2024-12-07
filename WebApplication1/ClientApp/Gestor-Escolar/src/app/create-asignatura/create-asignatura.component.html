@@ -31,14 +31,14 @@
   <span class="p-inputgroup-addon">
     <i class="pi pi-briefcase"></i>
   </span>
-      <p-dropdown
+      <p-multiSelect
         [options]="cursos"
         optionLabel="nombre"
         optionValue="nombre"
-      formControlName="cursoNombre"
-      placeholder="Selecciona un curso"
-      [ngClass]="{'ng-invalid': isFieldInvalid('cursoNombres')}">
-      </p-dropdown>
+        formControlName="cursoNombres"
+        placeholder="Seleccione los cursos">
+      </p-multiSelect>
+
     </div>
 
     <!-- Días (Multiselect) -->

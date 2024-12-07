@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
@@ -9,6 +9,7 @@ import { ProfesorService } from '../services/profesor.service';
 import { InputTextModule } from 'primeng/inputtext';
 import {Button, ButtonDirective} from 'primeng/button';
 import {AsignaturaService} from '../services/asignatura.service';
+import {DynamicDialogConfig} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-create-asignatura',
@@ -28,6 +29,7 @@ import {AsignaturaService} from '../services/asignatura.service';
 })
 export class CreateAsignaturaComponent implements OnInit {
   asignaturaForm: FormGroup;
+  @Input() asignaturaToEdit: any;
   cursos: any[] = []; // Lista de cursos
   profesores: any[] = []; // Lista de profesores
   dias: any[] = []; // Días de la semana
@@ -39,12 +41,13 @@ export class CreateAsignaturaComponent implements OnInit {
     private readonly cursoService: CursoService,
     private readonly profesorService: ProfesorService,
     private readonly asignaturaService: AsignaturaService,
-    private readonly messageService: MessageService
+    private readonly messageService: MessageService,
+    private readonly config:DynamicDialogConfig
   ) {
     this.asignaturaForm = this.fb.group({
       nombre: ['', Validators.required],
       profesorDni: ['', Validators.required],
-      cursoNombre: ['', Validators.required],
+      cursoNombres: [[], Validators.required],
       dias: [[], Validators.required],  // MultiSelect de días
       horasInicio: ['', Validators.required],  // Hora de inicio
       horasFin: ['', Validators.required],  // Hora de fin
@@ -57,6 +60,19 @@ export class CreateAsignaturaComponent implements OnInit {
     this.loadDias();
     this.loadHorasDisponiblesFin();
     this.loadHorasDisponiblesInicio();
+    const asignaturaToEdit = this.config?.data.asignaturaToEdit;
+
+    this.asignaturaForm = this.fb.group({
+      id: [asignaturaToEdit.id || ''],
+      nombre: [asignaturaToEdit.nombre || '', Validators.required],
+      profesorDni: [asignaturaToEdit.profesorDni || '', Validators.required],
+      cursoNombres: [asignaturaToEdit.cursoNombres || '', Validators.required],
+      dias: [asignaturaToEdit.dias || '', Validators.required],  // MultiSelect de días
+      horasInicio: [asignaturaToEdit.horasInicio || '', Validators.required],  // Hora de inicio
+      horasFin: [asignaturaToEdit.horasFin || '', Validators.required],  // Hora de fin
+    });
+
+
   }
 
   loadDias() {
@@ -126,48 +142,55 @@ export class CreateAsignaturaComponent implements OnInit {
       return;
     }
 
-    const asignaturaData = this.asignaturaForm.getRawValue();
+    const asignaturaData = this.asignaturaForm.value;
 
-    // Asegurar que cursoNombres sea siempre un array
-    const cursosSeleccionados = Array.isArray(asignaturaData.cursoNombre)
-      ? asignaturaData.cursoNombre
-      : [asignaturaData.cursoNombre];
-
-    const asignatura = {
-      nombre: asignaturaData.nombre,
-      profesorDni: asignaturaData.profesorDni,
-      cursoNombres: cursosSeleccionados, // Aseguramos que es un array
-      dias: asignaturaData.dias,
-      horasInicio: asignaturaData.horasInicio,
-      horasFin: asignaturaData.horasFin
-    };
-
-    console.log('Asignatura a crear:', asignatura);
-
-    this.asignaturaService.createAsignatura(asignatura).subscribe({
-      next: (response) => {
-        console.log('Asignatura creada con éxito:', response);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Asignatura creada',
-          detail: 'La asignatura se ha creado correctamente'
-        });
-        this.asignaturaForm.reset();
-      },
-      error: (error) => {
-        console.error('Error al crear asignatura:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al crear asignatura',
-          detail: 'Ha ocurrido un error al crear la asignatura'
-        });
-      }
-    });
+    if (asignaturaData.id) {
+      // Actualizar asignatura existente
+      this.asignaturaService.updateAsignatura(asignaturaData.id, asignaturaData).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Asignatura actualizada',
+            detail: 'Los datos se han actualizado correctamente.'
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar asignatura:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo actualizar la asignatura.'
+          });
+        }
+      });
+    } else {
+      // Crear nueva asignatura
+      this.asignaturaService.createAsignatura(asignaturaData).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Asignatura creada',
+            detail: 'Se ha creado una nueva asignatura.'
+          });
+          this.asignaturaForm.reset();
+        },
+        error: (error) => {
+          console.error('Error al crear asignatura:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo crear la asignatura.'
+          });
+        }
+      });
+    }
   }
 
 
   isFieldInvalid(field: string): any {
     const control = this.asignaturaForm.get(field);
-    return control?.invalid && (control?.dirty || control?.touched);
+    return control?.invalid && (control?.touched || control?.dirty);
   }
+
+
 }

@@ -1,10 +1,15 @@
 import {Component, Input} from '@angular/core';
 import {DynamicDialogConfig} from 'primeng/dynamicdialog';
+import {AccordionModule} from 'primeng/accordion';
+import {NgForOf} from '@angular/common';
 
 @Component({
   selector: 'app-view-asignatura',
   standalone: true,
-  imports: [],
+  imports: [
+    AccordionModule,
+    NgForOf
+  ],
   templateUrl: './view-asignatura.component.html',
   styleUrl: './view-asignatura.component.css'
 })

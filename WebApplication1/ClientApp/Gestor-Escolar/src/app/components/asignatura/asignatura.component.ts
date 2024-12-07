@@ -66,6 +66,25 @@ export class AsignaturaComponent implements OnInit {
     });
   }
 
+  editAsignatura(asignatura: any) {
+    const dialogRef = this.dialogService.open(CreateAsignaturaComponent, {
+      header: 'Editar Asignatura',
+      width: '70%',
+      data: {
+        asignaturaToEdit: asignatura
+      }
+    });
+
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Asignatura editada correctamente.'});
+
+
+      }
+    });
+    this.cargarAsignaturas();
+  }
+
   viewAsignatura(asignatura: any) {
     const dialogRef = this.dialogService.open(ViewAsignaturaComponent, {
       header: 'Ver Asignatura',
