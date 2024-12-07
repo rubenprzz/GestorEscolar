@@ -1,0 +1,23 @@
+<p-accordion [activeIndex]="0">
+  <!-- Información General -->
+  <p-accordionTab header="Información General">
+    <p><strong>ID:</strong> {{ retraso?.id }}</p>
+    <p><strong>Fecha:</strong> {{ retraso?.fecha | date }}</p>
+    <p><strong>Asignatura:</strong> {{ retraso?.asignaturaNombre }}</p>
+  </p-accordionTab>
+
+  <!-- Información del Alumno -->
+  <p-accordionTab header="Información del Alumno">
+    <p><strong>Nombre:</strong> {{ retraso?.alumnoNombre }}</p>
+    <p><strong>DNI:</strong> {{ retraso?.alumnoDni }}</p>
+  </p-accordionTab>
+
+  <!-- Información del Retraso -->
+  <p-accordionTab header="Detalles del Retraso">
+    <p><strong>Hora de Inicio:</strong> {{ retraso?.horaInicio }}</p>
+    <p><strong>Hora de Llegada:</strong> {{ retraso?.horaLlegada }}</p>
+    <p><strong>Minutos de Retraso:</strong> {{ retraso?.minutosRetraso }}</p>
+    <p><strong>Motivo:</strong> {{ retraso?.motivo || 'No especificado' }}</p>
+    <p><strong>Justificado:</strong> {{ retraso?.justificado ? 'Sí' : 'No' }}</p>
+  </p-accordionTab>
+</p-accordion>

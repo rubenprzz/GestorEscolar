@@ -1,0 +1,14 @@
+<div class="asignatura-details">
+  <h2>Detalles de la Asignatura</h2>
+
+  <p><strong>ID:</strong> {{ asignatura?.id }}</p>
+  <p><strong>Nombre:</strong> {{ asignatura?.nombre }}</p>
+  <p><strong>Profesor DNI:</strong> {{ asignatura?.profesorDni }}</p>
+  <p><strong>Días:</strong> {{ asignatura?.dias?.join(', ') }}</p>
+
+  <p><strong>Horarios:</strong></p>
+  <p><strong>Horas Inicio:</strong> {{ asignatura?.horasInicio?.join(', ') }}</p>
+  <p><strong>Horas Fin:</strong> {{ asignatura?.horasFin?.join(', ') }}</p>
+
+
+</div>

@@ -1,0 +1,23 @@
+<p-accordion [activeIndex]="0">
+  <!-- Información General -->
+  <p-accordionTab header="Información General">
+    <p><strong>ID:</strong> {{ asistencia?.id }}</p>
+    <p><strong>Identificador:</strong> {{ asistencia?.identificador }}</p>
+    <p><strong>Asignatura:</strong> {{ asistencia?.asignaturaNombre }}</p>
+    <p><strong>Presente:</strong> {{ asistencia?.isPresente ? 'Sí' : 'No' }}</p>
+  </p-accordionTab>
+
+  <!-- Información del Alumno -->
+  <p-accordionTab header="Información del Alumno">
+    <p><strong>ID del Alumno:</strong> {{ asistencia?.alumnoId }}</p>
+    <p><strong>Nombre:</strong> {{ asistencia?.alumnoNombre }}</p>
+    <p><strong>DNI:</strong> {{ asistencia?.alumnoDni }}</p>
+  </p-accordionTab>
+
+  <!-- Horarios -->
+  <p-accordionTab header="Horarios">
+    <p><strong>Día:</strong> {{ asistencia?.dia }}</p>
+    <p><strong>Hora de Inicio:</strong> {{ asistencia?.horaInicio }}</p>
+    <p><strong>Hora de Fin:</strong> {{ asistencia?.horaFin }}</p>
+  </p-accordionTab>
+</p-accordion>

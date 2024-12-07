@@ -1,0 +1,24 @@
+<p-accordion [activeIndex]="0">
+  <!-- Información Personal -->
+  <p-accordionTab header="Información Personal">
+    <p><strong>Nombre:</strong> {{ profesor?.nombre }}</p>
+    <p><strong>Apellidos:</strong> {{ profesor?.apellidos }}</p>
+    <p><strong>DNI:</strong> {{ profesor?.dni }}</p>
+    <p><strong>Email:</strong> {{ profesor?.email }}</p>
+    <p><strong>Teléfono:</strong> {{ profesor?.telefono }}</p>
+  </p-accordionTab>
+
+  <!-- Asignaturas -->
+  <p-accordionTab header="Asignaturas">
+    <ng-container *ngIf="profesor?.asignaturas?.length > 0; else noAsignaturas">
+      <ul>
+        <li *ngFor="let asignatura of profesor?.asignaturas">
+          <p><strong>Nombre:</strong> {{ asignatura.id }}</p>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-template #noAsignaturas>
+      <p>No hay asignaturas asignadas a este profesor.</p>
+    </ng-template>
+  </p-accordionTab>
+</p-accordion>

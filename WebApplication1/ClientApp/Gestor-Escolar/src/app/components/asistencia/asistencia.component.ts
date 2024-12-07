@@ -6,6 +6,7 @@ import {CrearAlumnoComponent} from '../crear-alumno/crear-alumno.component';
 import {MessageService} from 'primeng/api';
 import {DialogService} from 'primeng/dynamicdialog';
 import {CreateAsistenciaComponent} from '../../create-asistencia/create-asistencia.component';
+import {ViewAsistenciaComponent} from '../../view-asistencia/view-asistencia.component';
 
 @Component({
   selector: 'app-asistencia',
@@ -43,6 +44,14 @@ export class AsistenciaComponent implements OnInit {
 
   ngOnInit() {
     this.cargarAsistencias();
+  }
+
+  viewAsistencia(asistencia: any) {
+    const dialogRef = this.dialogService.open(ViewAsistenciaComponent, {
+      header: 'Ver Asistencia',  // Título del diálogo
+      width: '70%',
+      data: {asistenciaToView: asistencia},  // Pasar el alumno a ver
+    });
   }
 
   cargarAsistencias() {

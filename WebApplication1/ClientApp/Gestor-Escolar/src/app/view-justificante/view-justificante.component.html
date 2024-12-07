@@ -1,0 +1,26 @@
+<p-accordion [activeIndex]="0">
+  <!-- Información Básica -->
+  <p-accordionTab header="Información Básica">
+    <p><strong>ID:</strong> {{ justificante?.id }}</p>
+    <p><strong>Alias:</strong> {{ justificante?.alias }}</p>
+    <p><strong>Fecha de Justificación:</strong> {{ justificante?.fechaJustificacion | date }}</p>
+    <p><strong>Descripción:</strong> {{ justificante?.descripcion }}</p>
+  </p-accordionTab>
+
+  <!-- Información de Motivo -->
+  <p-accordionTab header="Motivo">
+    <p><strong>Motivo:</strong> {{ justificante?.motivo }}</p>
+  </p-accordionTab>
+
+  <!-- Información del Alumno -->
+  <p-accordionTab header="Información del Alumno">
+    <p><strong>DNI del Alumno:</strong> {{ justificante?.alumnoDni }}</p>
+  </p-accordionTab>
+
+  <!-- Información de Asistencia -->
+  <p-accordionTab header="Información de la Asistencia">
+    <p><strong>Identificador de Asistencia:</strong> {{ justificante?.asistenciaIdentificador }}</p>
+    <p><strong>¿Estuvo Presente?</strong> {{ justificante?.asistenciaIsPresente ? 'Sí' : 'No' }}</p>
+    <p><strong>Asignatura:</strong> {{ justificante?.asignaturaNombre }}</p>
+  </p-accordionTab>
+</p-accordion>

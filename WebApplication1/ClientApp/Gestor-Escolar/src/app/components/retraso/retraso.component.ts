@@ -6,6 +6,7 @@ import {CrearAlumnoComponent} from '../crear-alumno/crear-alumno.component';
 import {CreateRetrasoComponent} from '../../create-retraso/create-retraso.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {MessageService} from 'primeng/api';
+import {ViewRetrasoComponent} from '../../view-retraso/view-retraso.component';
 
 @Component({
   selector: 'app-retraso',
@@ -49,6 +50,14 @@ export class RetrasoComponent implements OnInit {
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el retraso' });
       }
+    });
+  }
+
+  viewRetraso(retraso: any) {
+    const dialogRef = this.dialogService.open(ViewRetrasoComponent, {
+      header: 'Ver retraso',
+      width: '70%',
+      data: {retrasoToView: retraso},
     });
   }
 

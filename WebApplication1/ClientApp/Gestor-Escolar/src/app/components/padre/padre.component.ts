@@ -7,6 +7,7 @@ import {DialogService} from 'primeng/dynamicdialog';
 import {MessageService} from 'primeng/api';
 import {CreatePadreComponent} from '../../create-padre/create-padre.component';
 import {CreateProfesorComponent} from '../../create-profesor/create-profesor.component';
+import {ViewPadreComponent} from '../../view-padre/view-padre.component';
 
 @Component({
   selector: 'app-padre',
@@ -33,6 +34,14 @@ export class PadreComponent implements OnInit{
     { field: 'telefono', header: 'Teléfono', width: '16%', type: 'text' },
     /*{ field: 'alumnosDni', header: 'Alumnos', width: '16%', type: 'text' },*/
   ];
+
+  viewPadre(padre: any) {
+    const dialogRef = this.dialogService.open(ViewPadreComponent, {
+      header: 'Ver Padre',  // Título del diálogo
+      width: '70%',
+      data: {padreToView: padre},  // Pasar el alumno
+    });
+  }
 
   cargarPadres() {
     this.padreService.getPadres().subscribe({

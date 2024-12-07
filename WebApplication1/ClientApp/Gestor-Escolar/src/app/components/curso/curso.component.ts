@@ -5,6 +5,7 @@ import {CrearAlumnoComponent} from '../crear-alumno/crear-alumno.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {CreateCursoComponent} from '../../create-curso/create-curso.component';
 import {MessageService} from 'primeng/api';
+import {ViewCursoComponent} from '../../view-curso/view-curso.component';
 
 @Component({
   selector: 'app-curso',
@@ -23,7 +24,7 @@ export class CursoComponent  implements OnInit{
     { field: 'nombre', header: 'Nombre', width: '16%', type: 'text' },
     { field: 'fechaInicio', header: 'Fecha Inicio', width: '16%', type: 'text' },
     { field: 'fechaFin', header: 'Fecha Fin', width: '16%', type: 'text' },
-    { field: 'alumnos', header: 'Alumnos', width: '16%', type: 'text' },
+    { field: 'asignaturasNombres', header: 'Asignaturas', width: '16%', type: 'text' },
 
 
   ];
@@ -55,6 +56,16 @@ export class CursoComponent  implements OnInit{
       }
     });
   }
+  viewCurso(curso: any) {
+    const dialogRef = this.dialogService.open(ViewCursoComponent, {
+      header: 'Ver Curso',
+      width: '70%',
+      data: {
+        cursoToView: curso
+      }
+    });
+  }
+
   ngOnInit() {
     this.cargarCursos();
   }
@@ -79,17 +90,17 @@ export class CursoComponent  implements OnInit{
     this.curs.getCursos().subscribe({
       next: (data) => {
         this.cursos = data.map((curso: any) => {
-          curso.alumnos = curso.alumnos.map((alumno: any) => alumno.dni);
+          curso.asignaturasNombres = curso.asignaturas.map((asignatura: any) => asignatura.nombre).join(', ');
           return curso;
         });
       },
       error: (error) => {
         console.error('Error al cargar cursos:', error);
-      }
+      },
     });
   }
-
-
-
-
 }
+
+
+
+

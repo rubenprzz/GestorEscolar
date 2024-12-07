@@ -11,6 +11,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
 import {Button} from 'primeng/button';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ViewProfesorComponent} from '../../view-profesor/view-profesor.component';
 
 @Component({
   selector: 'app-profesor',
@@ -45,6 +46,14 @@ export class ProfesorComponent implements OnInit {
     {field: 'telefono', header: 'Teléfono', width: '16%', type: 'text'},
     {field: 'asignaturasNombre', header: 'Asignaturas', width: '16%', type: 'text'},
   ];
+
+  viewProfesor(profesor: any) {
+    const dialogRef = this.dialogService.open(ViewProfesorComponent, {
+      header: 'Ver Profesor',
+      width: '70%',
+      data: {profesorToView: profesor},
+    });
+  }
 
 
 

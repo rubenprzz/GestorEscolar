@@ -5,4 +5,5 @@
   [globalFilterFields]="['nombre', 'curso', 'profesor']"
   (onAdd)="openNew()"
   (onDelete)="deleteAsignatura($event.id)"
+  (onView)="viewAsignatura($event)"
 ></app-table>

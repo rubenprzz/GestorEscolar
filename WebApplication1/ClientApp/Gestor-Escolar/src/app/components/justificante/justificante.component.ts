@@ -4,6 +4,7 @@ import { JustificanteService } from '../../services/justificante.service';
 import {AddJustificanteComponent} from '../add-justificante/add-justificante.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {MessageService} from 'primeng/api';
+import {ViewJustificanteComponent} from '../../view-justificante/view-justificante.component';
 
 
 @Component({
@@ -44,6 +45,16 @@ export class JustificanteComponent implements OnInit {
       }
     });
   }
+
+  viewJustificante(justificante: any) {
+    const dialogRef = this.dialogService.open(ViewJustificanteComponent, {
+      header: 'Ver justificante',  // Título del diálogo
+      width: '70%',
+      data: {justificanteToView: justificante},
+    });
+  }
+
+
   deleteJustificante(id: number): void {
     this.justificanteService.deleteJustificante(id).subscribe({
       next: () => {

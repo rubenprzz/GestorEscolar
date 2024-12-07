@@ -1,0 +1,33 @@
+<p-accordion [activeIndex]="0">
+  <!-- Información General -->
+  <p-accordionTab header="Información General">
+    <p><strong>ID:</strong> {{ curso?.id }}</p>
+    <p><strong>Nombre:</strong> {{ curso?.nombre }}</p>
+    <p><strong>Fecha de Inicio:</strong> {{ curso?.fechaInicio | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Fecha de Fin:</strong> {{ curso?.fechaFin | date:'dd/MM/yyyy' }}</p>
+  </p-accordionTab>
+
+  <!-- Asignaturas -->
+  <p-accordionTab *ngIf="curso?.asignaturas?.length > 0" header="Asignaturas">
+    <div *ngFor="let asignatura of curso?.asignaturas" class="asignatura-card">
+      <p><strong>Nombre:</strong> {{ asignatura.nombre }}</p>
+      <p><strong>Profesor DNI:</strong> {{ asignatura.profesorDni }}</p>
+      <p><strong>Días:</strong> {{ asignatura.dias.join(', ') }}</p>
+      <p><strong>Horarios:</strong></p>
+      <ul>
+        <li *ngFor="let inicio of asignatura.horasInicio; let i = index">
+          De {{ inicio }} a {{ asignatura.horasFin[i] }}
+        </li>
+      </ul>
+    </div>
+  </p-accordionTab>
+
+  <!-- Alumnos -->
+  <p-accordionTab header="Alumnos" *ngIf="curso?.alumnos?.length > 0; else noAlumnos">
+    <p>Este curso tiene {{ curso?.alumnos?.length }} alumnos inscritos.</p>
+  </p-accordionTab>
+
+  <ng-template #noAlumnos>
+    <p>No hay alumnos registrados en este curso.</p>
+  </ng-template>
+</p-accordion>

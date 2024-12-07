@@ -1,0 +1,23 @@
+<p-accordion [activeIndex]="0">
+  <!-- Información del Padre -->
+  <p-accordionTab header="Información del Padre">
+    <p><strong>ID:</strong> {{ padre?.id }}</p>
+    <p><strong>Nombre:</strong> {{ padre?.nombre }} {{ padre?.apellidos }}</p>
+    <p><strong>DNI:</strong> {{ padre?.dni }}</p>
+    <p><strong>Teléfono:</strong> {{ padre?.telefono }}</p>
+  </p-accordionTab>
+
+  <!-- Hijos del Padre -->
+  <p-accordionTab header="Hijos">
+    <div *ngIf="padre?.alumnos?.length > 0; else noHijos">
+      <ul>
+        <li *ngFor="let hijo of padre.alumnos">
+          <p><strong>DNI:</strong> {{ hijo }}</p>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noHijos>
+      <p>No hay hijos registrados para este padre.</p>
+    </ng-template>
+  </p-accordionTab>
+</p-accordion>

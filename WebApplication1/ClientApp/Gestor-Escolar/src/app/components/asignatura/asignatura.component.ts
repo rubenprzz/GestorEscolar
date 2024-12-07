@@ -5,6 +5,7 @@ import {CrearAlumnoComponent} from '../crear-alumno/crear-alumno.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import {MessageService} from 'primeng/api';
 import {CreateAsignaturaComponent} from '../../create-asignatura/create-asignatura.component';
+import {ViewAsignaturaComponent} from '../../view-asignatura/view-asignatura.component';
 
 @Component({
   selector: 'app-asignatura',
@@ -61,6 +62,16 @@ export class AsignaturaComponent implements OnInit {
       error: (err) => {
         console.error('Error al eliminar alumno', err);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la asignatura' });
+      }
+    });
+  }
+
+  viewAsignatura(asignatura: any) {
+    const dialogRef = this.dialogService.open(ViewAsignaturaComponent, {
+      header: 'Ver Asignatura',
+      width: '70%',
+      data: {
+        asignaturaToView: asignatura
       }
     });
   }
