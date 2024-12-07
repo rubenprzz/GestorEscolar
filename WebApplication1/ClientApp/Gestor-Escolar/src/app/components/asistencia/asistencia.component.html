@@ -4,4 +4,5 @@
   [globalFilterFields]="['dia', 'isPresente', 'alumnoDni', 'identificador', 'horaInicio', 'horaFin', 'asignaturaNombre']"
   (onAdd)="openNew()"
   (onDelete)="deleteAsistencia($event.id)"
+  (onEdit)="editAsistencia($event)"
 ></app-table>

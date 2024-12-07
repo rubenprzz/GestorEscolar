@@ -230,7 +230,8 @@ namespace WebApplication1.Services
             var alumno = await _context.Alumnos.FindAsync(id);
             if (alumno != null)
             {
-                _context.Alumnos.Remove(alumno);
+                alumno.isDeleted = true;
+                _context.Alumnos.Update(alumno);
                 await _context.SaveChangesAsync();
                 return true;
             }

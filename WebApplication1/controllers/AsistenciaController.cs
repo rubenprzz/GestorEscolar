@@ -66,13 +66,13 @@ public class AsistenciaController : ControllerBase
         return CreatedAtAction(nameof(GetAsistencia), new { id = nuevaAsistencia.Id }, nuevaAsistencia);
     }
     [HttpPut("{id}")]
-    public async Task<ActionResult<Asistencia>> UpdateAsistencia(int id, [FromBody] Asistencia asistencia)
+    public async Task<ActionResult<Asistencia>> UpdateAsistencia(int id, [FromBody] createAsistenciaDto asistencia)
     {
         if (asistencia == null || id != asistencia.Id)
         {
             return BadRequest("Los datos de la asistencia son incorrectos.");
         }
-        var asistenciaActualizada = await _asistenciaService.ActualizarAsistencia(asistencia);
+        var asistenciaActualizada = await _asistenciaService.ActualizarAsistencia(id, asistencia);
         if (asistenciaActualizada == null)
         {
             return NotFound();

@@ -17,6 +17,11 @@ export class AsistenciaService {
     return this.http.get(this.apiUrl);
 
   }
+  updateAsistencia(id: number, asistencia: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, asistencia);
+  }
+
+
   createAsistencia(asistencia: any): Observable<any> {
     return this.http.post(this.apiUrl, asistencia);
   }

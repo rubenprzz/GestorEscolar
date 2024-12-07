@@ -57,9 +57,10 @@
       placeholder="Seleccionar asignaturas"
       [filter]="true"
       [virtualScroll]="true"
-      [itemSize]="30"
+      [virtualScrollItemSize]="30"
       [maxSelectedLabels]="3"
       [showToggleAll]="false"
+
       ></p-multiSelect>
       <small *ngIf="isFieldInvalid('asignaturas')" class="p-error"
       >Seleccionar al menos una asignatura</small
@@ -76,7 +77,7 @@
       placeholder="Seleccionar alumnos"
       [filter]="true"
       [virtualScroll]="true"
-      [itemSize]="30"
+      [virtualScrollItemSize]="30"
       [maxSelectedLabels]="3"
       [showToggleAll]="false"
       > </p-multiSelect>

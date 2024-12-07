@@ -18,7 +18,7 @@ import {CreateAsistenciaComponent} from '../../create-asistencia/create-asistenc
 })
 export class AsistenciaComponent implements OnInit {
   asistencias: any[] = [];
-
+  asistenciaToEdit: any;
   dayMapping: { [key: number]: string } = {
     1: 'Lunes',
     2: 'Martes',
@@ -71,6 +71,22 @@ export class AsistenciaComponent implements OnInit {
       },
     });
   }
+  editAsistencia(asistencia: any) {
+    const dialogRef = this.dialogService.open(CreateAsistenciaComponent, {
+      header: 'Editar Asistencia',  // Título del diálogo
+      width: '70%',
+      data: {asistenciaToEdit: asistencia},  // Pasar el alumno a editar
+    });
+
+    // Opcional: puedes escuchar si el alumno se edita correctamente
+    dialogRef.onClose.subscribe((result) => {
+      if (result) {
+        this.cargarAsistencias();  // Recargar los alumnos si se edita uno
+        this.messageService.add({ severity: 'success', summary: 'Exito', detail: 'Asistencia editada correctamente.' });
+      }
+    });
+  }
+
   openNew() {
     // Abre el dialog que contiene el formulario de crear alumno
     const dialogRef = this.dialogService.open(CreateAsistenciaComponent, {

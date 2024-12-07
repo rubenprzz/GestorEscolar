@@ -279,7 +279,7 @@ namespace WebApplication1.Services
             var curso = await _context.Cursos.FindAsync(id);
             if (curso != null)
             {
-                _context.Cursos.Remove(curso);
+                curso.isDeleted = true;
                 await _context.SaveChangesAsync();
                 return true;
             }

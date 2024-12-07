@@ -17,19 +17,18 @@
     <p *ngIf="(alumno?.padres?.length ?? 0) > 0; else noPadres">
       <strong>DNI de los Padres:</strong>
     <ul>
-      <li *ngFor="let padre of alumno?.padres">{{ padres }}</li>
+      <li *ngFor="let padre of alumno?.padres">{{ padre }}</li>
     </ul>
     <ng-template #noPadres>
       <p>No se han registrado padres para este alumno.</p>
     </ng-template>
   </p-accordionTab>
 
+
   <p-accordionTab header="Retrasos y Justificantes">
-    <p *ngIf="(retrasos?.length ?? 0) > 0; else noRetrasos">
-    <div *ngFor="let retraso of retrasos" class="retraso-card">
-      <p><strong>Fecha:</strong> {{ retraso.fecha | date }}</p>
-      <p><strong>Motivo:</strong> {{ retraso.motivo }}</p>
-      <p><strong>Justificado:</strong> {{ retraso.justificado ? 'Sí' : 'No' }}</p>
+    <p *ngIf="(alumno.justificantes?.length ?? 0) > 0; else noRetrasos">
+    <div *ngFor="let justificante of alumno.justificantes" class="retraso-card">
+      <p><strong>Identificador:</strong> {{ justificante }}</p>
     </div>
     <ng-template #noRetrasos>
       <p>No se han registrado retrasos ni justificantes para este alumno.</p>

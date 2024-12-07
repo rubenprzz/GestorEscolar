@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import {AccordionModule} from 'primeng/accordion';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {DynamicDialogConfig} from 'primeng/dynamicdialog';
+import {Padre} from '../../models/padre.model';
 
 @Component({
   selector: 'app-alumno-details',
@@ -22,7 +23,7 @@ import {DynamicDialogConfig} from 'primeng/dynamicdialog';
 export class ViewAlumnoComponent implements OnInit {
   @Input() alumnoToView: any | undefined;
   alumno: any | undefined;
-  retrasos: any[] = [];
+  justificantes: any[] = [];
   padres: any[] = [];
 
   constructor(
@@ -32,9 +33,17 @@ export class ViewAlumnoComponent implements OnInit {
   ) {
   }
 
+  loadJustificantes(): void {
+    console.log('Cargando justificantes');
+    console.log(this.alumno.justificantes + "justi");
+  }
+
+
   ngOnInit(): void {
     if (this.config.data.alumnoToView) {
       this.alumno = this.config.data.alumnoToView;
+      console.log(this.alumno);
+      this.loadJustificantes()
     }
 
 

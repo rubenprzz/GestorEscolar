@@ -14,4 +14,5 @@ public class Asistencia
 
     public int AsignaturaId { get; set; }
     public Asignatura Asignatura { get; set; }
+    public bool isDeleted { get; set; }
 }

@@ -11,6 +11,7 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {MultiSelectModule} from 'primeng/multiselect';
 import {PadreService} from '../../services/padre.service';
+import {Padre} from '../../models/padre.model';
 
 @Component({
   selector: 'app-crear-alumno',
@@ -47,18 +48,23 @@ export class CrearAlumnoComponent implements OnInit {
     // Cargar los cursos cuando se inicializa el componente
 
     const alumnoToEdit = this.config?.data.alumnoToEdit;
+    const fecha = alumnoToEdit.fecha ? new Date(alumnoToEdit.fecha) : null;
+    const padresDnis = Array.isArray(alumnoToEdit.padresDnis)
+      ? alumnoToEdit.padresDnis.map((padre: Padre) => padre.dni)
+      : [];
+
 
     this.alumnoForm = this.fb.group({
       id: [alumnoToEdit.id || ''],
       nombre: [alumnoToEdit.nombre || '', Validators.required],
       apellidos: [alumnoToEdit.apellidos || '', Validators.required],
       dni: [alumnoToEdit.dni || '', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]], // Validación del DNI
-      fechaNacimiento: [alumnoToEdit.fechaNacimiento || '', Validators.required],
+      fechaNacimiento: [fecha || '', Validators.required],
       email: [alumnoToEdit.email || '', [Validators.required, Validators.email]],
       telefono: [alumnoToEdit.telefono || ''],
       urlFoto: [alumnoToEdit.urlFoto || ''],
       cursoNombre: [alumnoToEdit.cursoNombre || '', Validators.required],
-      padresDnis: [alumnoToEdit.padresDnis],
+      padresDnis: [padresDnis || [], Validators.required],  // Asignar solo los DNIs
 
       });
 
@@ -67,7 +73,6 @@ export class CrearAlumnoComponent implements OnInit {
 
   initializeForm() {
     this.alumnoForm = this.fb.group({
-      id: [''],
       nombre: ['', Validators.required],
       apellidos: ['', Validators.required],
       dni: ['', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]], // Validación del DNI
@@ -76,7 +81,7 @@ export class CrearAlumnoComponent implements OnInit {
       telefono: [''],
       urlFoto: [''],
       cursoNombre: ['', Validators.required],
-      padresDnis: [''],
+      padresDnis: [[], Validators.required],
     });
   }
 
@@ -93,13 +98,14 @@ export class CrearAlumnoComponent implements OnInit {
   loadPadres() {
     this.padreService.getPadres().subscribe({
       next: (data) => {
-        this.padres = data;  // Asigna los padres al arreglo
+        this.padres = data.map((padre: any) => ({ dni: padre.dni }));  // Mapea los datos para crear un array de objetos con la propiedad `dni`
       },
       error: (error) => {
         console.error('Error al cargar los padres:', error);
       }
     });
   }
+
 
   // Función para verificar si el campo es inválido
   isFieldInvalid(field: string): any {
@@ -129,7 +135,10 @@ export class CrearAlumnoComponent implements OnInit {
     formData.append('email', alumnoData.email);
     formData.append('telefono', alumnoData.telefono || '');
     formData.append('cursoNombre', alumnoData.cursoNombre);
-    formData.append('padresDnis', alumnoData.padresDnis);
+    const padresDnis = alumnoData.padresDnis.map((padre: any) => padre.dni);
+    padresDnis.forEach((dni: string) => {
+      formData.append('padresDnis', dni);
+    });
     formData.append('urlFoto', alumnoData.urlFoto);
 
 

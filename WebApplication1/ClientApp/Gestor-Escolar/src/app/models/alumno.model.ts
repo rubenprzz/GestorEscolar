@@ -15,7 +15,7 @@ export interface Alumno {
   cursoId: number;
   cursoNombre: string;
   urlFoto: string;
-  padres: Padre[];
+  padres: any[];
   cantidadAsistenciasFaltadas: number;
   cantidadRetrasos: number;
   asistencias: Asistencia[];

@@ -180,21 +180,45 @@ namespace WebApplication1.Services
         
     
 
-        public async Task<Asistencia> ActualizarAsistencia(Asistencia asistencia)
+        public async Task<Asistencia> ActualizarAsistencia(int id, createAsistenciaDto asistencia)
         {
             var asistenciaExistente = await _context.Asistencias.FindAsync(asistencia.Id);
             if (asistenciaExistente == null)
             {
-                return null;
+                return null; // Si la asistencia no existe, devolvemos null
             }
 
-            asistenciaExistente.DiaSemana = asistencia.DiaSemana;
-            asistenciaExistente.HoraInicio = asistencia.HoraInicio;
-            asistenciaExistente.HoraFin = asistencia.HoraFin;
+            var alumno = await _context.Alumnos.FindAsync(asistencia.alumnoDNI);
+            if (alumno == null)
+            {
+                throw new ArgumentNullException(nameof(alumno), "El alumno no existe.");
+            }
+
+            var asignatura = await _context.Asignaturas.FindAsync(asistencia.asignaturaNombre);
+            if (asignatura == null)
+            {
+                throw new ArgumentNullException(nameof(asignatura), "La asignatura no existe.");
+            }
+
+            // Validar que HorasDeClase no sea nulo o esté vacío
+            var primeraHoraDeClase = asignatura.HorasDeClase?.FirstOrDefault();
+            if (primeraHoraDeClase == null)
+            {
+                throw new InvalidOperationException("La asignatura no tiene horas de clase definidas.");
+            }
+
+            // Generar identificador
+            var identificador = await GenerarIdentificador(asignatura.Nombre, alumno.Nombre, alumno.Dni);
+
+            // Actualizar los campos de la asistencia existente
+            asistenciaExistente.DiaSemana = primeraHoraDeClase.Dia;
+            asistenciaExistente.HoraInicio = primeraHoraDeClase.HoraInicio;
+            asistenciaExistente.HoraFin = primeraHoraDeClase.HoraFin;
             asistenciaExistente.IsPresente = asistencia.IsPresente;
-            asistenciaExistente.Identificador = asistencia.Identificador;
-            asistenciaExistente.AlumnoId = asistencia.AlumnoId;
-            asistenciaExistente.AsignaturaId = asistencia.AsignaturaId;
+            asistenciaExistente.Identificador = identificador;
+            asistenciaExistente.Alumno = alumno;
+            asistenciaExistente.Asignatura = asignatura;
+            asistenciaExistente.isDeleted = false;
 
             _context.Asistencias.Update(asistenciaExistente);
             await _context.SaveChangesAsync();
@@ -202,12 +226,14 @@ namespace WebApplication1.Services
             return asistenciaExistente;
         }
 
+
         public async Task<bool> EliminarAsistencia(int id)
         {
             var asistencia = await _context.Asistencias.FindAsync(id);
             if (asistencia != null)
             {
-                _context.Asistencias.Remove(asistencia);
+                asistencia.isDeleted = true;
+                _context.Asistencias.Update(asistencia);
                 await _context.SaveChangesAsync();
                 return true;
             }

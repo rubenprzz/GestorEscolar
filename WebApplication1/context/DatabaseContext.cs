@@ -31,7 +31,19 @@ namespace WebApplication1.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            
+            //que ignore los is deleted
+            modelBuilder.Entity<Padre>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Alumno>().HasQueryFilter(a => !a.isDeleted);
+            modelBuilder.Entity<Profesor>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<Asignatura>().HasQueryFilter(a => !a.isDeleted);
+            modelBuilder.Entity<Curso>().HasQueryFilter(c => !c.isDeleted);
+            modelBuilder.Entity<Asistencia>().HasQueryFilter(a => !a.isDeleted);
+            modelBuilder.Entity<Retraso>().HasQueryFilter(r => !r.isDeleted);
+            modelBuilder.Entity<Nota>().HasQueryFilter(n => !n.isDeleted);
+            modelBuilder.Entity<Hora>().HasQueryFilter(h => !h.isDeleted);
+            modelBuilder.Entity<Justificante>().HasQueryFilter(j => !j.isDeleted);
+            
             modelBuilder.Entity<IdentityUser>().ToTable("Users");
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");

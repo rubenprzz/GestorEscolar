@@ -123,7 +123,8 @@ namespace WebApplication1.Services
             var padre = await _context.Padres.FindAsync(id);
             if (padre != null)
             {
-                _context.Padres.Remove(padre);
+                padre.isDeleted = true;
+                _context.Padres.Update(padre);
                 await _context.SaveChangesAsync();
                 return true;
             }

@@ -161,7 +161,8 @@ namespace WebApplication1.Services
             var asignatura = await _context.Asignaturas.FindAsync(id);
             if (asignatura != null)
             {
-                _context.Asignaturas.Remove(asignatura);
+                asignatura.isDeleted = true;
+                _context.Asignaturas.Update(asignatura);
                 await _context.SaveChangesAsync();
                 return true;
             }

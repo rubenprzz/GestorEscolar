@@ -23,6 +23,7 @@ export class CursoComponent  implements OnInit{
     { field: 'nombre', header: 'Nombre', width: '16%', type: 'text' },
     { field: 'fechaInicio', header: 'Fecha Inicio', width: '16%', type: 'text' },
     { field: 'fechaFin', header: 'Fecha Fin', width: '16%', type: 'text' },
+    { field: 'alumnos', header: 'Alumnos', width: '16%', type: 'text' },
 
 
   ];
@@ -77,13 +78,17 @@ export class CursoComponent  implements OnInit{
   cargarCursos() {
     this.curs.getCursos().subscribe({
       next: (data) => {
-        this.cursos = data;
+        this.cursos = data.map((curso: any) => {
+          curso.alumnos = curso.alumnos.map((alumno: any) => alumno.dni);
+          return curso;
+        });
       },
       error: (error) => {
         console.error('Error al cargar cursos:', error);
       }
     });
   }
+
 
 
 
