@@ -9,7 +9,6 @@ using WebApplication1.DTOs;
 
 namespace WebApplication1.Controllers
 {   
-    [Authorize(Roles = "Director,Profesor", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class AlumnoController : ControllerBase
@@ -22,7 +21,7 @@ namespace WebApplication1.Controllers
             _alumnoService = alumnoService;
             _environment = environment;
         }
-
+        [Authorize(Roles = "Director,Profesor", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<ActionResult<List<Alumno>>> GetAlumnos()
         {
@@ -30,7 +29,7 @@ namespace WebApplication1.Controllers
             return Ok(alumnos);
         }
         
-
+        [Authorize(Roles = "Director,Profesor", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("dni/{dni}")]
         public async Task<ActionResult<Alumno>> GetAlumnoPorDni(string dni)
         {
@@ -42,7 +41,7 @@ namespace WebApplication1.Controllers
             return Ok(alumno);
             
         }
-
+        [Authorize(Roles = "Director,Profesor", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("{id}")]
         public async Task<ActionResult<Alumno>> GetAlumno(int id)
         {
@@ -53,6 +52,8 @@ namespace WebApplication1.Controllers
             }
             return Ok(alumno);
         }
+        [Authorize(Roles = "Director,Profesor", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         [HttpPost("upload")]
 
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Alumno))]
@@ -128,7 +129,7 @@ namespace WebApplication1.Controllers
 
             return CreatedAtAction(nameof(GetAlumnoPorDni), new { dni = nuevoAlumno.Dni }, nuevoAlumno);
         }
-
+        
         [HttpPut("{id}")]
         public async Task<ActionResult<Alumno>> UpdateAlumno(int id, [FromForm] CrearAlumnoDto dto)
         {

@@ -61,7 +61,6 @@ export class MenuComponent implements OnInit {
         { label: 'Profesores', icon: 'pi pi-user', routerLink: '/profesor' },
         { label: 'Cursos', icon: 'pi pi-briefcase', routerLink: '/curso' },
         { label: 'Padres', icon: 'pi pi-users', routerLink: '/padre' },
-        { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.onLogout() }, // Usamos command para el logout
       ] : []),
       ...(this.userRole ? [
         { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.onLogout() }, // Usamos command para el logout

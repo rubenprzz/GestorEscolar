@@ -14,6 +14,7 @@ import {AddJustificanteComponent} from './components/add-justificante/add-justif
 import {RegisterComponent} from './register/register.component';
 
 export const routes: Routes = [
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   { path: 'alumnos', component: AlumnoComponent },
   { path: 'justificante', component: JustificanteComponent },
   { path: 'retraso', component: RetrasoComponent },

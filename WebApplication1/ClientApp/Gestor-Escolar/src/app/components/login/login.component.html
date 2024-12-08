@@ -22,6 +22,7 @@
       </div>
 
       <button pButton type="submit" label="Iniciar Sesión" [disabled]="loginForm.invalid"></button>
+      <a [routerLink]="['/register']" class="block mt-3">¿No tienes cuenta? Regístrate</a>
     </form>
 
     <small *ngIf="errorMessage" class="p-error block mt-3">{{ errorMessage }}</small>

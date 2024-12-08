@@ -48,7 +48,6 @@ export class CrearAlumnoComponent implements OnInit {
     // Cargar los cursos cuando se inicializa el componente
 
     const alumnoToEdit = this.config?.data.alumnoToEdit;
-    const fecha = alumnoToEdit.fecha ? new Date(alumnoToEdit.fecha) : null;
     const padresDnis = Array.isArray(alumnoToEdit.padresDnis)
       ? alumnoToEdit.padresDnis.map((padre: Padre) => padre.dni)
       : [];
@@ -59,7 +58,7 @@ export class CrearAlumnoComponent implements OnInit {
       nombre: [alumnoToEdit.nombre || '', Validators.required],
       apellidos: [alumnoToEdit.apellidos || '', Validators.required],
       dni: [alumnoToEdit.dni || '', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]], // Validación del DNI
-      fechaNacimiento: [fecha || '', Validators.required],
+      fechaNacimiento: [alumnoToEdit.fechaNacimiento || '', Validators.required],
       email: [alumnoToEdit.email || '', [Validators.required, Validators.email]],
       telefono: [alumnoToEdit.telefono || ''],
       urlFoto: [alumnoToEdit.urlFoto || ''],
@@ -120,9 +119,7 @@ export class CrearAlumnoComponent implements OnInit {
 
     const formData = new FormData();
     const alumnoData = this.alumnoForm.value;
-    if (alumnoData.id) {
-      formData.append('id', alumnoData.id.toString());
-    }
+
     formData.append('nombre', alumnoData.nombre);
     formData.append('apellidos', alumnoData.apellidos);
     formData.append('dni', alumnoData.dni);
@@ -134,18 +131,21 @@ export class CrearAlumnoComponent implements OnInit {
     formData.append('email', alumnoData.email);
     formData.append('telefono', alumnoData.telefono || '');
     formData.append('cursoNombre', alumnoData.cursoNombre);
+
+    // Si el campo 'padresDnis' es un array de objetos, se puede mapear para enviar los DNIs.
     const padresDnis = alumnoData.padresDnis.map((padre: any) => padre.dni);
     padresDnis.forEach((dni: string) => {
       formData.append('padresDnis', dni);
     });
-    formData.append('urlFoto', alumnoData.urlFoto);
 
+    if (alumnoData.urlFoto) {
+      formData.append('urlFoto', alumnoData.urlFoto);  // Aquí deberías enviar el archivo
+    }
 
-
-
-    if (this.alumnoForm.get('id')) {
+    // Enviar el FormData
+    if (this.alumnoForm.get('id')?.value) {
       // Actualizar el alumno
-      const alumnoId = this.alumnoForm.get('id')?.value; // ID del alumno almacenado en el formulario
+      const alumnoId = this.alumnoForm.get('id')?.value;
       this.alumnoService.updateAlumno(alumnoId, formData).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Alumno actualizado' });
@@ -170,14 +170,6 @@ export class CrearAlumnoComponent implements OnInit {
     }
   }
 
-  /*  onCursoChange(event: any) {
-      const selectedCurso = event.value;
-      if (selectedCurso && selectedCurso.nombre) {
-        this.alumnoForm.patchValue({
-          cursoNombre: selectedCurso.nombre
-        });
-      }
-    }*/
 
   onFileChange(event: any) {
     const file = event.files[0];

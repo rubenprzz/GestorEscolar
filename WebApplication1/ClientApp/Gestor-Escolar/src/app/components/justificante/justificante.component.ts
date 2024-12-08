@@ -41,7 +41,6 @@ export class JustificanteComponent implements OnInit {
     dialogRef.onClose.subscribe((result) => {
       if (result) {
         this.cargarJustificantes();  // Recargar los alumnos si se crea uno nuevo
-        this.messageService.add({severity: 'success', summary: 'Exito', detail: 'Alumno creado correctamente.'});
       }
     });
   }

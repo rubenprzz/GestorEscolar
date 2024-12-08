@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoginService} from '../../services/login.service';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {FloatLabelModule} from 'primeng/floatlabel';
 import {InputTextModule} from 'primeng/inputtext';
 import {NgIf} from '@angular/common';
@@ -19,7 +19,8 @@ import {PasswordModule} from 'primeng/password';
     NgIf,
     ButtonDirective,
     CardModule,
-    PasswordModule
+    PasswordModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
