@@ -113,7 +113,6 @@ export class CrearAlumnoComponent implements OnInit {
     return control?.invalid && (control?.touched || control?.dirty);
   }
 
-  // Función que se ejecuta al enviar el formulario
   onSubmit() {
     if (this.alumnoForm.invalid) {
       return;

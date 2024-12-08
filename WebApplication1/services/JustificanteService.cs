@@ -34,7 +34,7 @@ namespace WebApplication1.Services
             var justificanteViewModel = new JustificanteViewModel
             {
                 Id = justificante.Id,
-                FechaJustificacion = justificante.FechaJustificacion,
+                FechaJustificacion = justificante.FechaJustificacion.ToString("yyyy-MM-dd"),
                 Descripcion = justificante.Descripcion,
                 Alias = justificante.Alias,
                 Motivo = justificante.Motivo,
@@ -64,7 +64,7 @@ namespace WebApplication1.Services
                 .Select(j => new JustificanteViewModel
                 {
                     Id = j.Id,
-                    FechaJustificacion = j.FechaJustificacion,
+                    FechaJustificacion = j.FechaJustificacion.ToString("yyyy-MM-dd"),
                     Descripcion = j.Descripcion,
                     Alias = j.Alias,
                     Motivo = j.Motivo,
@@ -137,7 +137,7 @@ namespace WebApplication1.Services
                 .Select(j => new JustificanteViewModel
                 {
                     Id = j.Id,
-                    FechaJustificacion = j.FechaJustificacion,
+                    FechaJustificacion = j.FechaJustificacion.ToString("yyyy-MM-dd"),
                     Descripcion = j.Descripcion,
                     Alias = j.Alias,
                     Motivo = j.Motivo,
@@ -170,7 +170,7 @@ namespace WebApplication1.Services
             var justificanteViewModel = new JustificanteViewModel
             {
                 Id = justificante.Id,
-                FechaJustificacion = justificante.FechaJustificacion,
+                FechaJustificacion = justificante.FechaJustificacion.ToString("yyyy-MM-dd"),
                 Descripcion = justificante.Descripcion,
                 Alias = justificante.Alias,
                 Motivo = justificante.Motivo,
@@ -199,7 +199,7 @@ namespace WebApplication1.Services
                 .Select(j => new JustificanteViewModel
                 {
                     Id = j.Id,
-                    FechaJustificacion = j.FechaJustificacion,
+                    FechaJustificacion = j.FechaJustificacion.ToString("yyyy-MM-dd"),
                     Descripcion = j.Descripcion,
                     Alias = j.Alias,
                     Motivo = j.Motivo,

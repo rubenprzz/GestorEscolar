@@ -45,12 +45,14 @@ export class AddJustificanteComponent implements OnInit {
     this.loadAsistencias();
 
     const justificanteToEdit = this.config?.data.justificanteToEdit;
+    const fechaJustificacion = justificanteToEdit.fechaJustificacion ? new Date(justificanteToEdit.fechaJustificacion) : null;
+
 
 
     this.justificanteForm = this.fb.group({
       id: [justificanteToEdit.id || ''],
       alias: [{value: justificanteToEdit.alias, disabled: true}],
-      fechaJustificacion: [justificanteToEdit.fechaJustificacion || '', Validators.required],
+      fechaJustificacion: [fechaJustificacion || '', Validators.required],
       descripcion: [justificanteToEdit.descripcion || '', Validators.required],
       alumnoDni: [justificanteToEdit.alumnoDni || '', Validators.required],
       motivo: [justificanteToEdit.motivo || '', Validators.required],
