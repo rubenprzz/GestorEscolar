@@ -19,6 +19,33 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
     c.OperationFilter<FileUploadOperationFilter>();
 });
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<DatabaseContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"], // Verifica esto
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!)),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true
+        };
+    });
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("DirectorPolicy", policy =>
+        policy.RequireRole("Director"));
+    options.AddPolicy("ProfesorPolicy", policy =>
+        policy.RequireRole("Profesor"));
+});
 builder.Services.AddControllers();
 builder.Services.AddScoped<AlumnoService>();
 builder.Services.AddScoped<JustificanteService>();
@@ -32,54 +59,18 @@ builder.Services.AddScoped<ProfesorService>();
 builder.Services.AddScoped<CursoService>();
 builder.Services.AddScoped<BaseMapper>();
 
-builder.Services.AddAuthorization();
 builder.Services.AddScoped<FileService>();
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseNpgsql(connectionString));
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero, // Para evitar problemas con la expiración de tokens
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tengoqueusarunaclavemuylargaporquesinoelencriptadorparalascredencialesmedaunaexpecionpornoserdemasiadosegura")) // Usa tu clave secreta
-        };
-    });
+    options.UseNpgsql("DefaultConnection"));
+builder.Services.AddDbContext<DatabaseContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentityCore<User>()
-    .AddEntityFrameworkStores<DatabaseContext>()
-    .AddDefaultTokenProviders();
+// Configura Identity
 
-/*
-builder.Services.AddIdentityApiEndpoints<IdentityUser>();
-*/
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<DatabaseContext>();
+
 builder.Services.AddRazorPages();
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    // Password settings.
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 1;
 
-    // Lockout settings.
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-
-    // User settings.
-    options.User.AllowedUserNameCharacters =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = false;
-});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
@@ -94,13 +85,14 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
-/*using (var scope = app.Services.CreateScope())
+
+using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-    string[] roles = { "Admin", "Alumno" };
-
+    // Crear roles si no existen
+    string[] roles = { "Director", "Profesor" };
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -109,16 +101,23 @@ var app = builder.Build();
         }
     }
 
-    string adminEmail = "admin@example.com";
-    string adminPassword = "Admin123!";
+    var email = "director@admin.com";
+    var dniU = "12345678A";
+    var user = await userManager.FindByEmailAsync(email);
 
-    if (await userManager.FindByEmailAsync(adminEmail) == null)
+    if (user == null)
     {
-        var adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
-        await userManager.CreateAsync(adminUser, adminPassword);
-        await userManager.AddToRoleAsync(adminUser, "Admin");
+        user = new User { UserName = email, Email = email ,dni = dniU };
+        var result = await userManager.CreateAsync(user, "Admin123!");
+
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(user, "Director");
+        }
+        
     }
-}*/
+}
+
 
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -140,6 +139,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.Use(async (context, next) =>
+{
+    var token = context.Request.Headers["Authorization"].ToString();
+    if (!string.IsNullOrEmpty(token))
+    {
+        Console.WriteLine("Token recibido: " + token);
+    }
+    else
+    {
+        Console.WriteLine("No se ha recibido token.");
+    }
+
+    await next.Invoke();
+});
+
 
 
 app.Run();

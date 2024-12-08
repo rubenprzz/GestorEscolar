@@ -1,0 +1,93 @@
+/* Estilos para el contenedor del formulario */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Estilo para la tarjeta que contiene el formulario */
+.login-card {
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Efecto hover en la tarjeta */
+.login-card:hover {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15); /* Aumenta la sombra al pasar el ratón */
+  border: 1px solid #477736;
+
+}
+
+/* Centrado del título */
+.text-center {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #b7b2b2;
+}
+
+/* Estilos para los campos de texto y botón */
+.p-fluid .p-field {
+  margin-bottom: 15px;
+}
+
+/* Estilos para los labels */
+.p-fluid label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #c2c2c2;
+}
+
+/* Estilos para los campos de texto */
+input.p-inputtext {
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease; /* Transición para el borde */
+}
+
+input.p-inputtext:focus {
+  border-color: #0069d9; /* Cambia el borde a azul cuando el campo tiene el foco */
+  box-shadow: 0 0 5px rgba(0, 105, 217, 0.4); /* Agrega un resplandor azul alrededor del campo */
+}
+
+/* Estilo para el botón, con un ancho completo */
+button.p-button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease; /* Transición de color */
+}
+
+button.p-button:hover {
+  background-color: #0056b3; /* Color más oscuro cuando se pasa el ratón */
+}
+
+/* Estilos para los mensajes de error */
+.p-error {
+  color: #f44336;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+/* Estilo para el mensaje de error general */
+.text-center .p-error {
+  font-weight: bold;
+}
+
+/* Efecto de enfoque en los campos */
+input.p-inputtext:focus {
+  outline: none;
+  border-color: #0069d9; /* Bordes azules */
+}

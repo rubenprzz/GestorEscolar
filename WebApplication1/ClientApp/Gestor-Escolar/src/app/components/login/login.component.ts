@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {FloatLabelModule} from 'primeng/floatlabel';
 import {InputTextModule} from 'primeng/inputtext';
 import {NgIf} from '@angular/common';
+import {ButtonDirective} from 'primeng/button';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ import {NgIf} from '@angular/common';
     FloatLabelModule,
     ReactiveFormsModule,
     InputTextModule,
-    NgIf
+    NgIf,
+    ButtonDirective
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

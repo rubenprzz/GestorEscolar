@@ -280,6 +280,7 @@ namespace WebApplication1.Services
             if (curso != null)
             {
                 curso.isDeleted = true;
+                _context.Cursos.Update(curso);
                 await _context.SaveChangesAsync();
                 return true;
             }
