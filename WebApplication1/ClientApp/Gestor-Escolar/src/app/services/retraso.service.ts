@@ -12,17 +12,41 @@ export class RetrasoService {
   constructor(  private readonly http: HttpClient
   ) { }
   getRetrasos() : Observable<any> {
-    return this.http.get(this.apiUrl)
+    return this.http.get(this.apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
   createRetraso(retraso: any) : Observable<any> {
-    return this.http.post(this.apiUrl, retraso)
+    return this.http.post(this.apiUrl, retraso, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
   updateRetraso(id:number,retraso: any) : Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, retraso)
+    return this.http.put(`${this.apiUrl}/${id}`, retraso, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
 
   deleteRetraso(id: number) : Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`)
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
 }
 

@@ -12,24 +12,56 @@ export class AlumnoService {
   constructor(private readonly http: HttpClient) { }
 
   getAlumnos(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<any[]>(this.apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+      }
+    });
   }
 
+
   createAlumno(alumno: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, alumno);
+    return this.http.post<any>(this.apiUrl, alumno, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
   }
+    });
+    }
   getAlumnoById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
 
   updateAlumno(dni: string, formData: FormData): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${dni}`, formData);
+    return this.http.put<any>(`${this.apiUrl}/${dni}`, formData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
+
   }
 
 
 
   deleteAlumno(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
+
   }
 }
 

@@ -1,0 +1,49 @@
+<div class="flex justify-content-center align-items-center" style="height: 100vh;">
+  <p-card header="Registro" [style]="{ width: '400px' }">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="p-fluid">
+      <div class="field mb-4">
+        <span class="p-float-label">
+          <input id="username" type="text" pInputText formControlName="username" />
+          <label for="username">Nombre de usuario</label>
+        </span>
+        <small *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="p-error">
+          El nombre de usuario es requerido y debe tener al menos 3 caracteres.
+        </small>
+      </div>
+
+      <div class="field mb-4">
+        <span class="p-float-label">
+          <input id="email" type="email" pInputText formControlName="email" />
+          <label for="email">Correo electrónico</label>
+        </span>
+        <small *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="p-error">
+          Ingrese un correo electrónico válido.
+        </small>
+      </div>
+
+      <div class="field mb-4">
+        <span class="p-float-label">
+          <p-password id="password" formControlName="password" [toggleMask]="true"></p-password>
+          <label for="password">Contraseña</label>
+        </span>
+        <small *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="p-error">
+          La contraseña debe tener al menos 6 caracteres.
+        </small>
+      </div>
+
+      <div class="field mb-4">
+        <span class="p-float-label">
+          <input id="dni" type="text" pInputText formControlName="dni" />
+          <label for="dni">DNI</label>
+        </span>
+        <small *ngIf="registerForm.get('dni')?.invalid && registerForm.get('dni')?.touched" class="p-error">
+          Ingrese un DNI válido (8 números seguidos de una letra).
+        </small>
+      </div>
+
+      <button pButton type="submit" label="Registrarse" [disabled]="registerForm.invalid"></button>
+    </form>
+
+    <small *ngIf="errorMessage" class="p-error block mt-2">{{ errorMessage }}</small>
+  </p-card>
+</div>

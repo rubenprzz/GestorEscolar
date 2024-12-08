@@ -6,7 +6,7 @@ using WebApplication1.Models;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controllers;
-[Authorize(Roles = "Director", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(Roles = "Director,Profesor", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 [Route("api/[controller]")]
 [ApiController]

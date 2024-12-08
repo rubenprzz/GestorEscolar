@@ -11,21 +11,52 @@ export class PadreService {
 
   constructor(  private readonly http: HttpClient
   ) { }
+
   getPadres(): Observable<any> {
-    return this.http.get(this.apiUrl)
+    return this.http.get(this.apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
   createPadre(padre: any): Observable<any> {
-    return this.http.post(this.apiUrl, padre);
+    return this.http.post(this.apiUrl, padre, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
 
   updatePadre(id: number, padre: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, padre);
+    return this.http.put<any>(`${this.apiUrl}/${id}`, padre, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
   getPadreById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
   deletePadre(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+
+      }
+    });
   }
 }
 

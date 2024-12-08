@@ -54,7 +54,7 @@ export class CreateRetrasoComponent implements OnInit {
       horaLlegada: [retrasoToEdit.horaLlegada || '', Validators.required],
       alumnoDni: [retrasoToEdit.alumnoDni || '', Validators.required],
       justificado: [retrasoToEdit.justificado || false],
-      motivo: [retrasoToEdit.motivo || '', [Validators.required, Validators.minLength(5)]],
+      motivo: [retrasoToEdit.motivo || '', [Validators.required, Validators.minLength(10)]],
       asignaturaNombre: [retrasoToEdit.asignaturaNombre || '', Validators.required]
     });
 

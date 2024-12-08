@@ -57,9 +57,9 @@ export class CreateProfesorComponent implements OnInit {
     this.profesorForm = this.fb.group({
       nombre: ['', Validators.required],
       apellidos: ['', Validators.required],
-      dni: ['', Validators.required],
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]],
       email: ['', [Validators.required, Validators.email]],
-      telefono: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern(/^([6789])\d{8}$/)]],
       asignaturasId: [[], Validators.required], // Campo para multiselect
     });
   }

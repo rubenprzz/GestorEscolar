@@ -1,38 +1,29 @@
-<div class="login-container">
-  <div class="login-card">
-
-    <h2 class="text-center" style="color:#c2bbbb; margin-bottom:5vh">Iniciar sesión</h2>
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="p-fluid">
-        <!-- Campo de Email -->
-        <div class="p-field p-float-label mb-5">
-          <input pInputText id="email" formControlName="email" type="email" placeholder=" " />
+<div class="flex justify-content-center align-items-center" style="height: 100vh;">
+  <p-card header="Iniciar Sesión" [style]="{ width: '400px', marginTop: '20px', textAlign:'center', boxShadow: '0 4px 8px rgba(0,0,0,0.2)' }">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="p-fluid">
+      <div class="field mb-4 mt-5">
+        <span class="p-float-label">
+          <input id="email" type="email" pInputText formControlName="email" />
           <label for="email">Correo electrónico</label>
-          <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="p-error">
-            El correo electrónico es obligatorio y debe ser válido.
-          </small>
-        </div>
-
-        <!-- Campo de Contraseña -->
-        <div class="p-field p-float-label ">
-          <input pInputText id="password" formControlName="password" type="password" placeholder=" " />
-          <label for="password">Contraseña</label>
-          <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="p-error">
-            La contraseña es obligatoria.
-          </small>
-        </div>
-
-        <!-- Botón de Submit -->
-        <div class="p-field bg-blue-900">
-          <button pButton label="Iniciar sesión" type="submit" [disabled]="loginForm.invalid" class="w-full"></button>
-        </div>
-
-        <!-- Mensaje de error -->
-        <div *ngIf="errorMessage" class="p-error text-center">
-          {{ errorMessage }}
-        </div>
+        </span>
+        <small class="mt-5" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="p-error">
+          Ingrese un correo electrónico válido.
+        </small>
       </div>
+
+      <div class="field mb-4  mt-6">
+        <span class="p-float-label">
+          <p-password id="password" formControlName="password" [toggleMask]="true"></p-password>
+          <label for="password">Contraseña</label>
+        </span>
+        <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="p-error">
+          La contraseña es requerida.
+        </small>
+      </div>
+
+      <button pButton type="submit" label="Iniciar Sesión" [disabled]="loginForm.invalid"></button>
     </form>
-  </div>
+
+    <small *ngIf="errorMessage" class="p-error block mt-3">{{ errorMessage }}</small>
+  </p-card>
 </div>

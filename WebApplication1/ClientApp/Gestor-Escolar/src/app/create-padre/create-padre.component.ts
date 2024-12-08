@@ -58,8 +58,8 @@ export class CreatePadreComponent implements OnInit {
     this.padreForm = this.fb.group({
       nombre: ['', Validators.required],
       apellidos: ['', Validators.required],
-      dni: ['', Validators.required],
-      telefono: ['', Validators.required],
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^([6789])\d{8}$/)]],
       alumnos: [[], Validators.required], // Campo para multiselect
     });
   }
