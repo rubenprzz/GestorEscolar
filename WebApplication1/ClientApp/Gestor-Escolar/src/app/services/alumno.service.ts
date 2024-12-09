@@ -35,13 +35,8 @@ export class AlumnoService {
   }
 
   updateAlumno(dni: string, formData: FormData): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${dni}`, formData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
-
-      }
-    });
+    return this.http.put<any>(`${this.apiUrl}/${dni}`, formData)
+    ;
 
   }
 

@@ -46,15 +46,15 @@ export class CreateCursoComponent implements OnInit {
     const cursoToEdit = this.config?.data.cursoToEdit;
     const fechaInicio = cursoToEdit.fechaInicio ? new Date(cursoToEdit.fechaInicio) : null;
     const fechaFin = cursoToEdit.fechaFin ? new Date(cursoToEdit.fechaFin) : null;
-    const alumnos = cursoToEdit.alumnos || [];
+
 
     this.cursoForm = this.fb.group({
       id: [cursoToEdit.id || ''],
       nombre: [cursoToEdit.nombre || '', Validators.required],
       fechaInicio: [fechaInicio || '', Validators.required],
       fechaFin: [fechaFin|| '', Validators.required],
-      alumnos: [alumnos, Validators.required], // Campo para mult
-      asignaturas: [cursoToEdit.asignaturas?.map((asignatura: any) => asignatura.nombre) || [], Validators.required] // Campo para mult
+      alumnos: [cursoToEdit.alumnos, Validators.required], // Campo para mult
+      asignaturas: [cursoToEdit.asignaturas || [], Validators.required] // Campo para mult
     });
   }
 

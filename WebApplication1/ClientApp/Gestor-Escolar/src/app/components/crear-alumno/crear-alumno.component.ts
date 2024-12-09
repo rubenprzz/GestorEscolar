@@ -48,6 +48,8 @@ export class CrearAlumnoComponent implements OnInit {
     // Cargar los cursos cuando se inicializa el componente
 
     const alumnoToEdit = this.config?.data.alumnoToEdit;
+    const fechaNacimiento = alumnoToEdit.fechaNacimiento ? new Date(alumnoToEdit.fechaNacimiento) : null;
+
     const padresDnis = Array.isArray(alumnoToEdit.padresDnis)
       ? alumnoToEdit.padresDnis.map((padre: Padre) => padre.dni)
       : [];
@@ -58,11 +60,11 @@ export class CrearAlumnoComponent implements OnInit {
       nombre: [alumnoToEdit.nombre || '', Validators.required],
       apellidos: [alumnoToEdit.apellidos || '', Validators.required],
       dni: [alumnoToEdit.dni || '', [Validators.required, Validators.pattern(/^\d{8}[A-Za-z]$/)]], // Validación del DNI
-      fechaNacimiento: [alumnoToEdit.fechaNacimiento || '', Validators.required],
+      fechaNacimiento: [fechaNacimiento || '', Validators.required],
       email: [alumnoToEdit.email || '', [Validators.required, Validators.email]],
       telefono: [alumnoToEdit.telefono || ''],
       urlFoto: [alumnoToEdit.urlFoto || ''],
-      cursoNombre: [alumnoToEdit.cursoNombre || '', Validators.required],
+      cursoNombre: [alumnoToEdit.curso || '', Validators.required],
       padresDnis: [padresDnis || [], Validators.required],  // Asignar solo los DNIs
 
       });
@@ -119,7 +121,7 @@ export class CrearAlumnoComponent implements OnInit {
 
     const formData = new FormData();
     const alumnoData = this.alumnoForm.value;
-
+    formData.append('id', alumnoData.id);
     formData.append('nombre', alumnoData.nombre);
     formData.append('apellidos', alumnoData.apellidos);
     formData.append('dni', alumnoData.dni);

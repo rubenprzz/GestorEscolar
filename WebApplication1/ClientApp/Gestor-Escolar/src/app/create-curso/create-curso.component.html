@@ -55,10 +55,10 @@
         formControlName="asignaturas"
         optionLabel="nombre"
       placeholder="Seleccionar asignaturas"
+        [showClear]="true"
       [filter]="true"
       [virtualScroll]="true"
       [virtualScrollItemSize]="30"
-      [maxSelectedLabels]="3"
       [showToggleAll]="false"
 
       ></p-multiSelect>
@@ -75,10 +75,11 @@
         formControlName="alumnos"
         optionLabel="dni"
       placeholder="Seleccionar alumnos"
-      [filter]="true"
+        [showClear]="true"
+
+        [filter]="true"
       [virtualScroll]="true"
       [virtualScrollItemSize]="30"
-      [maxSelectedLabels]="3"
       [showToggleAll]="false"
       > </p-multiSelect>
       <small *ngIf="isFieldInvalid('alumnos')" class="p-error"
