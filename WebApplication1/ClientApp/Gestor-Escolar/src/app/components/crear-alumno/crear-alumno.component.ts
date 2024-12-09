@@ -121,7 +121,6 @@ export class CrearAlumnoComponent implements OnInit {
 
     const formData = new FormData();
     const alumnoData = this.alumnoForm.value;
-    formData.append('id', alumnoData.id);
     formData.append('nombre', alumnoData.nombre);
     formData.append('apellidos', alumnoData.apellidos);
     formData.append('dni', alumnoData.dni);
