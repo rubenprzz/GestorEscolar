@@ -146,6 +146,7 @@ export class CrearAlumnoComponent implements OnInit {
     // Enviar el FormData
     if (this.alumnoForm.get('id')?.value) {
       // Actualizar el alumno
+      formData.append('id', this.alumnoForm.get('id')?.value);
       const alumnoId = this.alumnoForm.get('id')?.value;
       this.alumnoService.updateAlumno(alumnoId, formData).subscribe({
         next: () => {
