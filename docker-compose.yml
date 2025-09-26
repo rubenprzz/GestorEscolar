@@ -9,9 +9,19 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: GestorAlumnosDb
     ports:
-      - "5432:5432"  # Asegúrate de que el puerto 5432 esté expuesto
+      - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data  # Persistencia de datos
+      - pgdata:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d 
+    networks:
+      - pg_network
+
+  adminer:
+    image: adminer
+    container_name: adminer_container
+    restart: always
+    ports:
+    - "8082:8080"  # cualquier puerto libre, por ejemplo 8082
     networks:
       - pg_network
 

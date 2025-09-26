@@ -38,14 +38,14 @@ public class AccountController : ControllerBase
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        if (!await _roleManager.RoleExistsAsync("Profesor"))
+        if (!await _roleManager.RoleExistsAsync("Director"))
         {
-            await _roleManager.CreateAsync(new IdentityRole("Profesor"));
+            await _roleManager.CreateAsync(new IdentityRole("Director"));
         }
 
-        await _userManager.AddToRoleAsync(user, "Profesor");
+        await _userManager.AddToRoleAsync(user, "Director");
 
-        return Ok(new { Message = "Usuario registrado exitosamente con el rol Profesor" });
+        return Ok(new { Message = "Usuario registrado exitosamente con el rol Director" });
     }
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
