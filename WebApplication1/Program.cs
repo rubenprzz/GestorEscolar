@@ -78,26 +78,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
-
-// Por esta configuración específica:
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowRender", policy =>
-    {
-        policy.WithOrigins(
-            "https://gestorescolar.onrender.com",  
-            "http://localhost:4200"               
-        )
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();  // Importante para autenticación JWT
-    });
-});
-
 // Y cambiar el UseCors:
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -107,7 +91,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
-app.UseCors("AllowRender");
 
 // Migraciones automáticas para Render
 using (var scope = app.Services.CreateScope())
