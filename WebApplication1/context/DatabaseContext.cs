@@ -24,9 +24,10 @@ namespace WebApplication1.Context
         
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("Host=localhost;Database=GestorAlumnosDb;Username=admin;Password=password;");
-        }
+        {   
+    optionsBuilder.UseNpgsql("postgresql://admin:eshHKRRf02FFSWx9DTIq4EGKJvzjagAb@dpg-d3bgfk3uibrs73felch0-a/gestoralumnosdb");
+        }   
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -12,7 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./db-init:/docker-entrypoint-initdb.d 
+      - ./db-init:/docker-entrypoint-initdb.d # Aquí metes tu dump.sql
     networks:
       - pg_network
 
@@ -21,7 +21,21 @@ services:
     container_name: adminer_container
     restart: always
     ports:
-    - "8082:8080"  # cualquier puerto libre, por ejemplo 8082
+      - "8082:8080"  # puerto libre para Adminer
+    networks:
+      - pg_network
+
+  webapplication1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webapp_container
+    depends_on:
+      - postgres
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=GestorAlumnosDb;Username=admin;Password=password"
+    ports:
+      - "5000:80" # Render asigna 80 o 8080, aquí puedes mapear a 5000 en local
     networks:
       - pg_network
 
