@@ -160,10 +160,9 @@ app.UseRouting();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();        // Mover aquí
+app.UseDefaultFiles();       // Mover aquí
 app.MapControllers();
-
-// Fallback para Angular SPA
 app.MapFallbackToFile("index.html");
 
 app.Run();
