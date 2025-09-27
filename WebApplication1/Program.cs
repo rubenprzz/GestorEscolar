@@ -17,15 +17,10 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
                           builder.Configuration.GetConnectionString("DefaultConnection");
-    
-    // Render proporciona postgres://, pero Entity Framework necesita postgresql://
-    if (connectionString?.StartsWith("postgres://") == true)
-    {
-        connectionString = connectionString.Replace("postgres://", "postgresql://");
-    }
-    
+
     options.UseNpgsql(connectionString);
 });
+
 
 // Identity y JWT
 builder.Services.AddIdentity<User, IdentityRole>()
