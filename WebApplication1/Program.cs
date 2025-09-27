@@ -159,9 +159,7 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseCors("AllowAll");
 app.UseAuthentication();
-app.UseAuthorization();
-app.UseStaticFiles();        // Mover aquí
-app.UseDefaultFiles();       // Mover aquí
+app.UseAuthorization();       // Mover aquí
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 

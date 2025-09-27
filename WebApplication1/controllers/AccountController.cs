@@ -76,7 +76,7 @@ public class AccountController : ControllerBase
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("estaesmiclavesecretaparafirmareljwtynodeberiasaberlanadieapartedemi")), SecurityAlgorithms.HmacSha512Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") ?? "estaesmiclavesecretaparafirmareljwtynodeberiasaberlanadieapartedemi")), SecurityAlgorithms.HmacSha512Signature)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
