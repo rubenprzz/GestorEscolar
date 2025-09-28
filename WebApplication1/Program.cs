@@ -9,10 +9,12 @@ using WebApplication1.Context;
 using WebApplication1.Mappers;
 using WebApplication1.Models;
 using WebApplication1.Services;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
+// Configuración de la DB para Render
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
@@ -23,9 +25,21 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     Console.WriteLine($"DefaultConnection config: {builder.Configuration.GetConnectionString("DefaultConnection")}");
     Console.WriteLine($"Final connection string: {connectionString}");
     
-    if (connectionString?.StartsWith("postgres://") == true)
+    // Convertir URI a formato Npgsql
+    if (connectionString?.StartsWith("postgresql://") == true)
     {
-        connectionString = connectionString.Replace("postgres://", "postgresql://");
+        var uri = new Uri(connectionString);
+        var npgsqlBuilder = new NpgsqlConnectionStringBuilder
+        {
+            Host = uri.Host,
+            Port = uri.Port,
+            Database = uri.AbsolutePath.Trim('/'),
+            Username = uri.UserInfo.Split(':')[0],
+            Password = uri.UserInfo.Split(':')[1],
+            SslMode = SslMode.Require,
+            TrustServerCertificate = true
+        };
+        connectionString = npgsqlBuilder.ToString();
         Console.WriteLine($"Converted connection string: {connectionString}");
     }
     
@@ -36,7 +50,6 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     
     options.UseNpgsql(connectionString);
 });
-
 
 // Identity y JWT
 builder.Services.AddIdentity<User, IdentityRole>()
