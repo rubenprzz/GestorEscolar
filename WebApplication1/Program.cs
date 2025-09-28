@@ -12,20 +12,30 @@ using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de la DB para Render
+
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
                           builder.Configuration.GetConnectionString("DefaultConnection");
     
+    // DEBUG: Agregar logs
+    Console.WriteLine($"DATABASE_URL env var: {Environment.GetEnvironmentVariable("DATABASE_URL")}");
+    Console.WriteLine($"DefaultConnection config: {builder.Configuration.GetConnectionString("DefaultConnection")}");
+    Console.WriteLine($"Final connection string: {connectionString}");
+    
     if (connectionString?.StartsWith("postgres://") == true)
     {
         connectionString = connectionString.Replace("postgres://", "postgresql://");
+        Console.WriteLine($"Converted connection string: {connectionString}");
+    }
+    
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("No connection string found!");
     }
     
     options.UseNpgsql(connectionString);
 });
-
 
 
 // Identity y JWT
