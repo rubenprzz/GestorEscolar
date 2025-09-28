@@ -23,11 +23,7 @@ namespace WebApplication1.Context
         public DbSet<Hora> Horas { get; set; }
         
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {   
-    optionsBuilder.UseNpgsql("postgresql://admin:eshHKRRf02FFSWx9DTIq4EGKJvzjagAb@dpg-d3bgfk3uibrs73felch0-a/gestoralumnosdb");
-        }   
-
+   
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

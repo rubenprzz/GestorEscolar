@@ -33,7 +33,7 @@ services:
     depends_on:
       - postgres
     environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=GestorAlumnosDb;Username=admin;Password=password"
+      ConnectionStrings__DefaultConnection: "Host=dpg-d3bgfk3uibrs73felch0-a.oregon-postgres.render.com;Port=5432;Database=gestoralumnosdb;Username=admin;Password=eshHKRRf02FFSWx9DTIq4EGKJvzjagAb;SSL Mode=Require;Trust Server Certificate=true"
     ports:
       - "5000:80" # Render asigna 80 o 8080, aquí puedes mapear a 5000 en local
     networks:

@@ -17,9 +17,15 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
                           builder.Configuration.GetConnectionString("DefaultConnection");
-
+    
+    if (connectionString?.StartsWith("postgres://") == true)
+    {
+        connectionString = connectionString.Replace("postgres://", "postgresql://");
+    }
+    
     options.UseNpgsql(connectionString);
 });
+
 
 
 // Identity y JWT
