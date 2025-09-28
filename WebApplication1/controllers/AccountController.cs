@@ -20,11 +20,16 @@ public class AccountController : ControllerBase
         _roleManager = roleManager;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+   [HttpPost("register")]
+public async Task<IActionResult> Register([FromBody] RegisterModel model)
+{
+    try 
     {
         if (!ModelState.IsValid)
+        {
+            Console.WriteLine("ModelState no válido");
             return BadRequest(ModelState);
+        }
 
         var user = new User
         {
@@ -34,19 +39,21 @@ public class AccountController : ControllerBase
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
-
         if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        if (!await _roleManager.RoleExistsAsync("Director"))
         {
-            await _roleManager.CreateAsync(new IdentityRole("Director"));
+            Console.WriteLine($"Error creando usuario: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            return BadRequest(result.Errors);
         }
 
         await _userManager.AddToRoleAsync(user, "Director");
-
         return Ok(new { Message = "Usuario registrado exitosamente con el rol Director" });
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Excepción en register: {ex.Message}");
+        return StatusCode(500, new { Message = "Error interno del servidor" });
+    }
+}
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
